@@ -10,9 +10,11 @@ using UnityEditor;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 public class Build  {
 
-    [MenuItem("AssetBundle/SetAssetBundlName")]
+    [MenuItem("Pack/AssetBundle/SetAssetBundlName")]
     static void SetAssetBundleName()
     {
         //设置所有Panel的 assetBundle名
@@ -46,9 +48,11 @@ public class Build  {
         }
     }
 
-    [MenuItem("AssetBundle/Android")]
+    [MenuItem("Pack/AssetBundle/Android")]
     static void CreateAssetBundle()
     {
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
         string adrPath = Application.dataPath + "/StreamingAssets/adr_res";
         DirectoryInfo directoryInfo = new DirectoryInfo(adrPath);
         if (!directoryInfo.Exists)
@@ -56,9 +60,43 @@ public class Build  {
         BuildPipeline.BuildAssetBundles(adrPath, BuildAssetBundleOptions.None, BuildTarget.Android);
     }
 
-    [MenuItem("Pack/gen_version")]
+    [MenuItem("Pack/gen_version/Android")]
     static void CreateVersion()
     {
-
+        
+        FileInfo version_file = new FileInfo(Application.dataPath + "/StreamingAssets/adr_res/version.ini");
+        FileStream fs = null;
+        if (!version_file.Exists)
+            fs = version_file.Create();
+        else
+            fs = version_file.OpenWrite();
+        StreamWriter sw = new StreamWriter(fs);
+        string[] fileList = Directory.GetFiles(Application.dataPath + "/StreamingAssets/adr_res", "*.u3d", SearchOption.AllDirectories);
+        using (MD5 md5Hash = MD5.Create())
+        {
+            for (int i = 0; i < fileList.Length; i++)
+            {
+                string fileFullPath = fileList[i].Replace("\\", "/");
+                FileInfo file = new FileInfo(fileFullPath);
+                FileStream fileStream = file.OpenRead();
+                int len = fileStream.ReadByte();
+                byte[] bytes = new byte[len];
+                fileStream.Read(bytes,0,len);
+                byte[] md5HashBytes = md5Hash.ComputeHash(bytes,0,len);
+                StringBuilder sBuilder = new StringBuilder();
+                int start_ix = fileFullPath.IndexOf("adr_res/") + "adr_res/".Length;
+                string fileName = fileFullPath.Substring(start_ix);
+                sBuilder.Append(fileName + "#");
+                for (int j = 0; j < md5HashBytes.Length; j++)
+                {
+                    sBuilder.Append(md5HashBytes[i].ToString());
+                }
+                
+                sw.WriteLine(sBuilder.ToString());
+            }
+        }
+        sw.Flush();
+        sw.Close();
+        AssetDatabase.Refresh();
     }
 }
