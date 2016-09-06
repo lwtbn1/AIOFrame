@@ -56,4 +56,9 @@ public class Build  {
         BuildPipeline.BuildAssetBundles(adrPath, BuildAssetBundleOptions.None, BuildTarget.Android);
     }
 
+    [MenuItem("Pack/gen_version")]
+    static void CreateVersion()
+    {
+
+    }
 }
