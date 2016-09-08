@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-
-class GameMain : MonoBehaviour
+using LuaInterface;
+class GameMain : LuaClient
 {
-    void Awake()
+    protected override void Awake()
     {
-
+        base.Awake();
+        
     }
 }
 

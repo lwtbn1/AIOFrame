@@ -14,7 +14,7 @@ public class UpdateMgr : MonoBehaviour {
 	void Start () {
         StartCoroutine(CheckUpdate());
 	}
-
+    byte[] new_ver_bytes;
     IEnumerator CheckUpdate()
     {
         Debug.Log("开始检查更新......");
@@ -23,8 +23,6 @@ public class UpdateMgr : MonoBehaviour {
         new_ver_dic = new Dictionary<string, string>();
         need_update_dic = new Dictionary<string, string>();
 
-        FileInfo fi_ver_new = new FileInfo(Application.persistentDataPath + "/version_new.ini");
-        FileStream fs_ver_new = fi_ver_new.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
         WWW www = new WWW(NetConfig.ResUrl + "/version.ini");
         while (!www.isDone)
         {
@@ -41,10 +39,7 @@ public class UpdateMgr : MonoBehaviour {
             ClassCollections.VerData data = ClassCollections.VerData.ToObj(splits[i]);
             new_ver_dic.Add(data.res_name, data.md5);
         }
-        fs_ver_new.Write(bytes, 0, bytes.Length);
-        fs_ver_new.Flush();
-        fs_ver_new.Close();
-
+        new_ver_bytes = bytes;
 
         FileInfo fi_ver_old = new FileInfo(Application.persistentDataPath + "/version.ini");
         if (!fi_ver_old.Exists)
@@ -80,6 +75,33 @@ public class UpdateMgr : MonoBehaviour {
 
     IEnumerator StartUpdate()
     {
-        yield return 1;
+        
+        foreach (KeyValuePair<string, string> kv in need_update_dic)
+        {
+            WWW www = new WWW( NetConfig.ResUrl + "/" + kv.Key);
+            while (!www.isDone)
+            {
+                yield return 1;
+            }
+            byte[] bytes = www.bytes;
+            string file_full_path = Application.persistentDataPath + "/" + kv.Key;
+            FileInfo file = new FileInfo(file_full_path);
+            string folder_path =  file_full_path.Substring(0, file_full_path.LastIndexOf("/"));
+            DirectoryInfo dir = new DirectoryInfo(folder_path);
+            if (!dir.Exists)
+                dir.Create();
+            if (file.Exists)
+                file.Delete();
+            FileStream fs = file.Open(FileMode.CreateNew, FileAccess.Write);
+            fs.Write(bytes, 0, bytes.Length);
+            fs.Flush();
+            fs.Close();
+        }
+        FileInfo fi_ver = new FileInfo(Application.persistentDataPath + "/version.ini");
+        FileStream fs_ver = fi_ver.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        fs_ver.Write(new_ver_bytes, 0, new_ver_bytes.Length);
+        fs_ver.Flush();
+        fs_ver.Close();
+        gameObject.AddComponent<GameMain>();
     }
 }

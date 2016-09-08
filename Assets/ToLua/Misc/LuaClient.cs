@@ -167,7 +167,7 @@ public class LuaClient : MonoBehaviour
         LoadLuaFiles();    
     }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         Instance = this;
         Init();
