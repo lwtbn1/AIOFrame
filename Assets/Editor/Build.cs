@@ -83,16 +83,11 @@ public class Build  {
                 byte[] bytes = new byte[len];
                 fileStream.Read(bytes,0,len);
                 byte[] md5HashBytes = md5Hash.ComputeHash(bytes,0,len);
-                StringBuilder sBuilder = new StringBuilder();
                 int start_ix = fileFullPath.IndexOf("adr_res/") + "adr_res/".Length;
                 string fileName = fileFullPath.Substring(start_ix);
-                sBuilder.Append(fileName + "#");
-                for (int j = 0; j < md5HashBytes.Length; j++)
-                {
-                    sBuilder.Append(md5HashBytes[i].ToString());
-                }
-                
-                sw.WriteLine(sBuilder.ToString());
+                ClassCollections.VerData data = new ClassCollections.VerData(fileName, md5HashBytes[i].ToString());
+                string data_str = Encoding.UTF8.GetString(Encoding.Default.GetBytes(data.ToJson()));
+                sw.WriteLine(data_str);
             }
         }
         sw.Flush();
