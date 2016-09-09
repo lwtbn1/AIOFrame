@@ -63,15 +63,25 @@ public class Build  {
     [MenuItem("Pack/gen_version/Android")]
     static void CreateVersion()
     {
-        
+        MoveLuaFile();
         FileInfo version_file = new FileInfo(Application.dataPath + "/StreamingAssets/adr_res/version.ini");
-        FileStream fs = null;
-        if (!version_file.Exists)
-            fs = version_file.Create();
-        else
-            fs = version_file.OpenWrite();
+        if (version_file.Exists)
+            version_file.Delete();
+        FileStream fs = version_file.Open(FileMode.CreateNew, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
+        
         string[] fileList = Directory.GetFiles(Application.dataPath + "/StreamingAssets/adr_res", "*.u3d", SearchOption.AllDirectories);
+        WriteVerInfo(fileList, sw);
+        string[] luaFileList = Directory.GetFiles(Application.dataPath + "/StreamingAssets/adr_res", "*.lua", SearchOption.AllDirectories);
+        WriteVerInfo(luaFileList, sw);
+
+        sw.Flush();
+        sw.Close();
+        AssetDatabase.Refresh();
+    }
+    static void WriteVerInfo(string[] fileList, StreamWriter sw)
+    {
+       
         using (MD5 md5Hash = MD5.Create())
         {
             for (int i = 0; i < fileList.Length; i++)
@@ -81,8 +91,8 @@ public class Build  {
                 FileStream fileStream = file.OpenRead();
                 int len = fileStream.ReadByte();
                 byte[] bytes = new byte[len];
-                fileStream.Read(bytes,0,len);
-                byte[] md5HashBytes = md5Hash.ComputeHash(bytes,0,len);
+                fileStream.Read(bytes, 0, len);
+                byte[] md5HashBytes = md5Hash.ComputeHash(bytes, 0, len);
                 int start_ix = fileFullPath.IndexOf("adr_res/") + "adr_res/".Length;
                 string fileName = fileFullPath.Substring(start_ix);
                 ClassCollections.VerData data = new ClassCollections.VerData(fileName, md5HashBytes[i].ToString());
@@ -90,8 +100,15 @@ public class Build  {
                 sw.WriteLine(data_str);
             }
         }
-        sw.Flush();
-        sw.Close();
-        AssetDatabase.Refresh();
+        
     }
+    static void MoveLuaFile()
+    {
+        DirectoryInfo lua_dir_old = new DirectoryInfo(Application.dataPath + "/StreamingAssets/adr_res/Lua");
+        if (lua_dir_old.Exists)
+            lua_dir_old.Delete(true);
+        FileMgr.CopyDirectory(Application.dataPath + "/Lua", Application.dataPath + "/StreamingAssets/adr_res/Lua");
+    }
+
+
 }

@@ -57,6 +57,8 @@ public class UpdateMgr : MonoBehaviour {
                 ClassCollections.VerData data = ClassCollections.VerData.ToObj(line_data);
                 old_ver_dic.Add(data.res_name, data.md5);
             }
+            fs_ver_old.Close();
+            sr_ver_old.Close();
             foreach (KeyValuePair<string, string> kv in new_ver_dic)
             {
                 if (old_ver_dic.ContainsKey(kv.Key))
@@ -98,7 +100,9 @@ public class UpdateMgr : MonoBehaviour {
             fs.Close();
         }
         FileInfo fi_ver = new FileInfo(Application.persistentDataPath + "/version.ini");
-        FileStream fs_ver = fi_ver.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        if (fi_ver.Exists)
+            fi_ver.Delete();
+        FileStream fs_ver = fi_ver.Open(FileMode.Create, FileAccess.ReadWrite);
         fs_ver.Write(new_ver_bytes, 0, new_ver_bytes.Length);
         fs_ver.Flush();
         fs_ver.Close();

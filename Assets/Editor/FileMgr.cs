@@ -34,4 +34,35 @@ public class FileMgr : MonoBehaviour {
     }
 
 
+    public static void CopyDirectory(string srcDir, string tgtDir)
+    {
+        DirectoryInfo source = new DirectoryInfo(srcDir);
+        DirectoryInfo target = new DirectoryInfo(tgtDir);
+
+
+        if (!source.Exists)
+        {
+            return;
+        }
+
+        if (!target.Exists)
+        {
+            target.Create();
+        }
+
+        FileInfo[] files = source.GetFiles();
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            File.Copy(files[i].FullName, target.FullName + @"\" + files[i].Name, true);
+        }
+
+        DirectoryInfo[] dirs = source.GetDirectories();
+
+        for (int j = 0; j < dirs.Length; j++)
+        {
+            CopyDirectory(dirs[j].FullName, target.FullName + @"\" + dirs[j].Name);
+        }
+    } 
+
 }
