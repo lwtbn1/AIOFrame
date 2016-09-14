@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Linq;
 public class Build  {
 
     [MenuItem("Pack/AssetBundle/SetAssetBundlName")]
@@ -69,39 +70,33 @@ public class Build  {
             version_file.Delete();
         FileStream fs = version_file.Open(FileMode.CreateNew, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        
-        string[] fileList = Directory.GetFiles(Application.dataPath + "/StreamingAssets/adr_res", "*.u3d", SearchOption.AllDirectories);
-        WriteVerInfo(fileList, sw);
-        string[] luaFileList = Directory.GetFiles(Application.dataPath + "/StreamingAssets/adr_res", "*.lua", SearchOption.AllDirectories);
-        WriteVerInfo(luaFileList, sw);
+        IEnumerable<string> fileList = Directory.GetFiles(Application.dataPath + "/StreamingAssets/adr_res", "*.*", SearchOption.AllDirectories).
+            Where(s => s.EndsWith(".u3d") || s.EndsWith(".lua"));
+        IEnumerator<string> enumerator = fileList.GetEnumerator();
+        MD5 md5Hash = MD5.Create();
+        while (enumerator.MoveNext())
+        {
+            string fileFullPath = enumerator.Current.Replace("\\", "/");
+            FileInfo file = new FileInfo(fileFullPath);
+            FileStream fileStream = file.OpenRead();
+            byte[] md5HashBytes = md5Hash.ComputeHash(fileStream);
+            int start_ix = fileFullPath.IndexOf("adr_res/") + "adr_res/".Length;
+            string fileName = fileFullPath.Substring(start_ix);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < md5HashBytes.Length; i++)
+                sb.Append(md5HashBytes[i].ToString("X2"));
+            ClassCollections.VerData data = new ClassCollections.VerData(fileName, sb.ToString());
+            string data_str = Encoding.UTF8.GetString(Encoding.Default.GetBytes(data.ToJson()));
+            sw.WriteLine(data_str);
+        }
 
+        
         sw.Flush();
+        fs.Close();
         sw.Close();
         AssetDatabase.Refresh();
     }
-    static void WriteVerInfo(string[] fileList, StreamWriter sw)
-    {
-       
-        using (MD5 md5Hash = MD5.Create())
-        {
-            for (int i = 0; i < fileList.Length; i++)
-            {
-                string fileFullPath = fileList[i].Replace("\\", "/");
-                FileInfo file = new FileInfo(fileFullPath);
-                FileStream fileStream = file.OpenRead();
-                int len = fileStream.ReadByte();
-                byte[] bytes = new byte[len];
-                fileStream.Read(bytes, 0, len);
-                byte[] md5HashBytes = md5Hash.ComputeHash(bytes, 0, len);
-                int start_ix = fileFullPath.IndexOf("adr_res/") + "adr_res/".Length;
-                string fileName = fileFullPath.Substring(start_ix);
-                ClassCollections.VerData data = new ClassCollections.VerData(fileName, md5HashBytes[i].ToString());
-                string data_str = Encoding.UTF8.GetString(Encoding.Default.GetBytes(data.ToJson()));
-                sw.WriteLine(data_str);
-            }
-        }
-        
-    }
+  
     static void MoveLuaFile()
     {
         DirectoryInfo lua_dir_old = new DirectoryInfo(Application.dataPath + "/StreamingAssets/adr_res/Lua");

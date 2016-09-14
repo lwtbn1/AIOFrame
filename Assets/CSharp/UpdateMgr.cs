@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine.UI;
+using System;
 /// <summary>
 /// 资源更新管理器
 /// </summary>
@@ -11,6 +13,7 @@ public class UpdateMgr : MonoBehaviour {
     Dictionary<string, string> old_ver_dic;
     Dictionary<string, string> new_ver_dic;
     Dictionary<string, string> need_update_dic;
+
 	void Start () {
         StartCoroutine(CheckUpdate());
 	}
@@ -77,7 +80,9 @@ public class UpdateMgr : MonoBehaviour {
 
     IEnumerator StartUpdate()
     {
-        
+        if (OnStartUpdate != null)
+            OnStartUpdate();
+        float ix = 0;
         foreach (KeyValuePair<string, string> kv in need_update_dic)
         {
             WWW www = new WWW( NetConfig.ResUrl + "/" + kv.Key);
@@ -85,6 +90,10 @@ public class UpdateMgr : MonoBehaviour {
             {
                 yield return 1;
             }
+            ix++;
+            if (OnUpdating != null)
+                OnUpdating(ix / (float)need_update_dic.Count);
+            Debug.Log(ix / (float)need_update_dic.Count);
             byte[] bytes = www.bytes;
             string file_full_path = Application.persistentDataPath + "/" + kv.Key;
             FileInfo file = new FileInfo(file_full_path);
@@ -99,6 +108,8 @@ public class UpdateMgr : MonoBehaviour {
             fs.Flush();
             fs.Close();
         }
+        if (OnEndUpdate != null)
+            OnEndUpdate();
         FileInfo fi_ver = new FileInfo(Application.persistentDataPath + "/version.ini");
         if (fi_ver.Exists)
             fi_ver.Delete();
@@ -108,4 +119,9 @@ public class UpdateMgr : MonoBehaviour {
         fs_ver.Close();
         gameObject.AddComponent<GameMain>();
     }
+    public Action OnStartUpdate;
+    public Action<float> OnUpdating;
+    public Action OnEndUpdate;
+    
+
 }

@@ -9,12 +9,16 @@ using UnityEngine;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 public class GameEntry : MonoBehaviour {
+    public Slider updateSlider;
+    public Text infoText;
     void Awake()
     {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         Application.runInBackground = true;
         DontDestroyOnLoad(gameObject);
+        infoText.text = "检查更新";
     }
 
     bool m_networkConnected = false;
@@ -27,7 +31,19 @@ public class GameEntry : MonoBehaviour {
             yield return true;
         }
 
-        gameObject.AddComponent<UpdateMgr>();
+        UpdateMgr updateMgr = gameObject.AddComponent<UpdateMgr>();
+        updateMgr.OnStartUpdate = () =>
+        {
+            updateSlider.gameObject.SetActive(true);
+            updateSlider.value = 0;
+            infoText.text = "正在更新....";
+        };
+        updateMgr.OnUpdating = (o) => {
+            updateSlider.value = o;
+        };
+        updateMgr.OnEndUpdate = () => {
+            updateSlider.value = 1;
+        };
         enabled = false;
 
     }
