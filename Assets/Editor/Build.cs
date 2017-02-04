@@ -59,6 +59,7 @@ public class Build  {
         if (!directoryInfo.Exists)
             directoryInfo.Create();
         BuildPipeline.BuildAssetBundles(adrPath, BuildAssetBundleOptions.None, BuildTarget.Android);
+        AssetDatabase.Refresh();
     }
 
     [MenuItem("Pack/gen_version/Android")]

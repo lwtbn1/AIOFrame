@@ -18,7 +18,7 @@ public class GameEntry : MonoBehaviour {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         Application.runInBackground = true;
         DontDestroyOnLoad(gameObject);
-        infoText.text = "检查更新";
+        
     }
 
     bool m_networkConnected = false;
@@ -43,6 +43,7 @@ public class GameEntry : MonoBehaviour {
         };
         updateMgr.OnEndUpdate = () => {
             updateSlider.value = 1;
+            gameObject.AddComponent<GameMain>();
         };
         enabled = false;
 

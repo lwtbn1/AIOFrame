@@ -2,7 +2,7 @@
 
 public static class LuaConst
 {
-    public static string luaDir = Application.dataPath + "/Lua";                //lua逻辑代码目录
+    public static string luaDir = Application.dataPath + "/StreamingAssets/adr_res" + "/Lua";                //lua逻辑代码目录(目前只考虑Andoid下)
     public static string toluaDir = Application.dataPath + "/ToLua/Lua";        //tolua lua文件目录
 
 #if UNITY_STANDALONE

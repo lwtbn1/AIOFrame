@@ -9,7 +9,8 @@ class GameMain : LuaClient
     protected override void Awake()
     {
         base.Awake();
-        
+       
     }
+
 }
 

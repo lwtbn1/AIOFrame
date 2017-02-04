@@ -1,10 +1,22 @@
 ManifestFileVersion: 0
-CRC: 862795623
+CRC: 2317182584
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: test/panel_test.u3d
+      Name: ui/items.u3d
       Dependencies: {}
     Info_1:
-      Name: ui/items.u3d
+      Name: panel/test/panel_test.u3d
+      Dependencies: {}
+    Info_2:
+      Name: panel/demo/demo_panel_1.u3d
+      Dependencies: {}
+    Info_3:
+      Name: panel/demo/demo_panel_2.u3d
+      Dependencies: {}
+    Info_4:
+      Name: panel/demo/demo_panel_3.u3d
+      Dependencies: {}
+    Info_5:
+      Name: panel/demo/demo_panel_4.u3d
       Dependencies: {}

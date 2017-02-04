@@ -15,7 +15,16 @@ public class UpdateMgr : MonoBehaviour {
     Dictionary<string, string> need_update_dic;
 
 	void Start () {
-        StartCoroutine(CheckUpdate());
+        if (Config.UpdateMode)
+        {
+            StartCoroutine(CheckUpdate());
+        }
+        else
+        {
+            if (OnEndUpdate != null)
+                OnEndUpdate();
+        }
+
 	}
     byte[] new_ver_bytes;
     IEnumerator CheckUpdate()
@@ -88,7 +97,7 @@ public class UpdateMgr : MonoBehaviour {
             WWW www = new WWW( NetConfig.ResUrl + "/" + kv.Key);
             while (!www.isDone)
             {
-                yield return 1;
+                yield return new WaitForEndOfFrame();
             }
             ix++;
             if (OnUpdating != null)
@@ -108,8 +117,7 @@ public class UpdateMgr : MonoBehaviour {
             fs.Flush();
             fs.Close();
         }
-        if (OnEndUpdate != null)
-            OnEndUpdate();
+        
         FileInfo fi_ver = new FileInfo(Application.persistentDataPath + "/version.ini");
         if (fi_ver.Exists)
             fi_ver.Delete();
@@ -117,7 +125,9 @@ public class UpdateMgr : MonoBehaviour {
         fs_ver.Write(new_ver_bytes, 0, new_ver_bytes.Length);
         fs_ver.Flush();
         fs_ver.Close();
-        gameObject.AddComponent<GameMain>();
+        if (OnEndUpdate != null)
+            OnEndUpdate();
+        
     }
     public Action OnStartUpdate;
     public Action<float> OnUpdating;
