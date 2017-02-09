@@ -13,6 +13,7 @@ using UnityEngine.UI;
 public class GameEntry : MonoBehaviour {
     public Slider updateSlider;
     public Text infoText;
+    
     void Awake()
     {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -30,8 +31,8 @@ public class GameEntry : MonoBehaviour {
         {
             yield return true;
         }
+        UpdateMgr updateMgr = GameMgr.Instance.AddManager<UpdateMgr>("UpdateMgr") as UpdateMgr;
 
-        UpdateMgr updateMgr = gameObject.AddComponent<UpdateMgr>();
         updateMgr.OnStartUpdate = () =>
         {
             updateSlider.gameObject.SetActive(true);
@@ -43,7 +44,9 @@ public class GameEntry : MonoBehaviour {
         };
         updateMgr.OnEndUpdate = () => {
             updateSlider.value = 1;
-            gameObject.AddComponent<GameMain>();
+            GameMgr.Instance.AddManager<ResMgr>("ResMgr");
+            GameMgr.Instance.AddManager<UIMgr>("UIMgr");
+            GameMgr.Instance.AddManager<LuaMgr>("LuaMgr");
         };
         enabled = false;
 

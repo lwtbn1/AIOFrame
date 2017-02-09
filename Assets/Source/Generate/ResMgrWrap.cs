@@ -6,7 +6,7 @@ public class ResMgrWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(ResMgr), typeof(System.Object));
+		L.BeginClass(typeof(ResMgr), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("LoadSpriteSyn", LoadSpriteSyn);
 		L.RegFunction("LoadSpriteAsyn", LoadSpriteAsyn);
 		L.RegFunction("LoadUIBundlesAsyn", LoadUIBundlesAsyn);
@@ -17,33 +17,9 @@ public class ResMgrWrap
 		L.RegFunction("UnloadUIBundle", UnloadUIBundle);
 		L.RegFunction("getPanelBundle", getPanelBundle);
 		L.RegFunction("UnloadPanelBundl", UnloadPanelBundl);
-		L.RegFunction("New", _CreateResMgr);
+		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", Lua_ToString);
 		L.EndClass();
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int _CreateResMgr(IntPtr L)
-	{
-		try
-		{
-			int count = LuaDLL.lua_gettop(L);
-
-			if (count == 0)
-			{
-				ResMgr obj = new ResMgr();
-				ToLua.PushObject(L, obj);
-				return 1;
-			}
-			else
-			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: ResMgr.New");
-			}
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -51,10 +27,11 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 2);
-			string arg0 = ToLua.CheckString(L, 1);
-			string arg1 = ToLua.CheckString(L, 2);
-			UnityEngine.Sprite o = ResMgr.LoadSpriteSyn(arg0, arg1);
+			ToLua.CheckArgsCount(L, 3);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			string arg0 = ToLua.CheckString(L, 2);
+			string arg1 = ToLua.CheckString(L, 3);
+			UnityEngine.Sprite o = obj.LoadSpriteSyn(arg0, arg1);
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -69,23 +46,24 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 3);
-			string arg0 = ToLua.CheckString(L, 1);
-			string arg1 = ToLua.CheckString(L, 2);
+			ToLua.CheckArgsCount(L, 4);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			string arg0 = ToLua.CheckString(L, 2);
+			string arg1 = ToLua.CheckString(L, 3);
 			System.Action<UnityEngine.Sprite> arg2 = null;
-			LuaTypes funcType3 = LuaDLL.lua_type(L, 3);
+			LuaTypes funcType4 = LuaDLL.lua_type(L, 4);
 
-			if (funcType3 != LuaTypes.LUA_TFUNCTION)
+			if (funcType4 != LuaTypes.LUA_TFUNCTION)
 			{
-				 arg2 = (System.Action<UnityEngine.Sprite>)ToLua.CheckObject(L, 3, typeof(System.Action<UnityEngine.Sprite>));
+				 arg2 = (System.Action<UnityEngine.Sprite>)ToLua.CheckObject(L, 4, typeof(System.Action<UnityEngine.Sprite>));
 			}
 			else
 			{
-				LuaFunction func = ToLua.ToLuaFunction(L, 3);
+				LuaFunction func = ToLua.ToLuaFunction(L, 4);
 				arg2 = DelegateFactory.CreateDelegate(typeof(System.Action<UnityEngine.Sprite>), func) as System.Action<UnityEngine.Sprite>;
 			}
 
-			System.Collections.IEnumerator o = ResMgr.LoadSpriteAsyn(arg0, arg1, arg2);
+			System.Collections.IEnumerator o = obj.LoadSpriteAsyn(arg0, arg1, arg2);
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -100,9 +78,10 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 1);
-			System.Collections.Generic.List<string> arg0 = (System.Collections.Generic.List<string>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<string>));
-			System.Collections.IEnumerator o = ResMgr.LoadUIBundlesAsyn(arg0);
+			ToLua.CheckArgsCount(L, 2);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			System.Collections.Generic.List<string> arg0 = (System.Collections.Generic.List<string>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.List<string>));
+			System.Collections.IEnumerator o = obj.LoadUIBundlesAsyn(arg0);
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -117,9 +96,10 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 1);
-			System.Collections.Generic.List<string> arg0 = (System.Collections.Generic.List<string>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<string>));
-			ResMgr.UnLoadUIBundles(arg0);
+			ToLua.CheckArgsCount(L, 2);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			System.Collections.Generic.List<string> arg0 = (System.Collections.Generic.List<string>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.List<string>));
+			obj.UnLoadUIBundles(arg0);
 			return 0;
 		}
 		catch(Exception e)
@@ -133,9 +113,11 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 1);
-			string arg0 = ToLua.CheckString(L, 1);
-			UnityEngine.GameObject o = ResMgr.LoadPanelSyn(arg0);
+			ToLua.CheckArgsCount(L, 3);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			string arg0 = ToLua.CheckString(L, 2);
+			string arg1 = ToLua.CheckString(L, 3);
+			UnityEngine.GameObject o = obj.LoadPanelSyn(arg0, arg1);
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -150,24 +132,25 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 2);
-			string arg0 = ToLua.CheckString(L, 1);
-			System.Action<UnityEngine.GameObject> arg1 = null;
-			LuaTypes funcType2 = LuaDLL.lua_type(L, 2);
+			ToLua.CheckArgsCount(L, 4);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			string arg0 = ToLua.CheckString(L, 2);
+			string arg1 = ToLua.CheckString(L, 3);
+			System.Action<UnityEngine.GameObject> arg2 = null;
+			LuaTypes funcType4 = LuaDLL.lua_type(L, 4);
 
-			if (funcType2 != LuaTypes.LUA_TFUNCTION)
+			if (funcType4 != LuaTypes.LUA_TFUNCTION)
 			{
-				 arg1 = (System.Action<UnityEngine.GameObject>)ToLua.CheckObject(L, 2, typeof(System.Action<UnityEngine.GameObject>));
+				 arg2 = (System.Action<UnityEngine.GameObject>)ToLua.CheckObject(L, 4, typeof(System.Action<UnityEngine.GameObject>));
 			}
 			else
 			{
-				LuaFunction func = ToLua.ToLuaFunction(L, 2);
-				arg1 = DelegateFactory.CreateDelegate(typeof(System.Action<UnityEngine.GameObject>), func) as System.Action<UnityEngine.GameObject>;
+				LuaFunction func = ToLua.ToLuaFunction(L, 4);
+				arg2 = DelegateFactory.CreateDelegate(typeof(System.Action<UnityEngine.GameObject>), func) as System.Action<UnityEngine.GameObject>;
 			}
 
-			System.Collections.IEnumerator o = ResMgr.LoadPanelAsyn(arg0, arg1);
-			ToLua.Push(L, o);
-			return 1;
+			obj.LoadPanelAsyn(arg0, arg1, arg2);
+			return 0;
 		}
 		catch(Exception e)
 		{
@@ -180,9 +163,10 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 1);
-			string arg0 = ToLua.CheckString(L, 1);
-			UnityEngine.AssetBundle o = ResMgr.getUIBundle(arg0);
+			ToLua.CheckArgsCount(L, 2);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			string arg0 = ToLua.CheckString(L, 2);
+			UnityEngine.AssetBundle o = obj.getUIBundle(arg0);
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -197,10 +181,11 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 2);
-			string arg0 = ToLua.CheckString(L, 1);
-			bool arg1 = LuaDLL.luaL_checkboolean(L, 2);
-			ResMgr.UnloadUIBundle(arg0, arg1);
+			ToLua.CheckArgsCount(L, 3);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			string arg0 = ToLua.CheckString(L, 2);
+			bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
+			obj.UnloadUIBundle(arg0, arg1);
 			return 0;
 		}
 		catch(Exception e)
@@ -214,9 +199,10 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 1);
-			string arg0 = ToLua.CheckString(L, 1);
-			UnityEngine.AssetBundle o = ResMgr.getPanelBundle(arg0);
+			ToLua.CheckArgsCount(L, 2);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			string arg0 = ToLua.CheckString(L, 2);
+			UnityEngine.AssetBundle o = obj.getPanelBundle(arg0);
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -231,11 +217,30 @@ public class ResMgrWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 2);
-			string arg0 = ToLua.CheckString(L, 1);
-			bool arg1 = LuaDLL.luaL_checkboolean(L, 2);
-			ResMgr.UnloadPanelBundl(arg0, arg1);
+			ToLua.CheckArgsCount(L, 3);
+			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			string arg0 = ToLua.CheckString(L, 2);
+			bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
+			obj.UnloadPanelBundl(arg0, arg1);
 			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int op_Equality(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.Object arg0 = (UnityEngine.Object)ToLua.ToObject(L, 1);
+			UnityEngine.Object arg1 = (UnityEngine.Object)ToLua.ToObject(L, 2);
+			bool o = arg0 == arg1;
+			LuaDLL.lua_pushboolean(L, o);
+			return 1;
 		}
 		catch(Exception e)
 		{

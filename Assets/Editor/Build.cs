@@ -15,7 +15,6 @@ using System.Text;
 using System.Linq;
 public class Build  {
 
-    [MenuItem("Pack/AssetBundle/SetAssetBundlName")]
     static void SetAssetBundleName()
     {
         //设置所有Panel的 assetBundle名
@@ -24,8 +23,16 @@ public class Build  {
         {
             AssetImporter ai = AssetImporter.GetAtPath(path);
             string folderName = FileMgr.getFolderName(path);
-            ai.assetBundleName = "panel/" + folderName + "/" + FileMgr.getFileName(path) + ".u3d";
+            ai.assetBundleName = "panel/" + folderName + ".u3d";
         }
+        string[] panelUiPaths = Directory.GetFiles("Assets/_Panel/", "*.png", SearchOption.AllDirectories);
+        foreach (string path in panelUiPaths)
+        {
+            AssetImporter ai = AssetImporter.GetAtPath(path);
+            string folderName = FileMgr.getFolderName(path);
+            ai.assetBundleName = "panel/" + folderName + ".u3d";
+        }
+
         //设置所有的ui的 assetBundle名(同一目录下的ui会放入一个图集，并打在一个包中)
         string[] uiPaths = Directory.GetFiles("Assets/_UI/", "*.png", SearchOption.AllDirectories);
         foreach (string path in uiPaths)
@@ -52,6 +59,7 @@ public class Build  {
     [MenuItem("Pack/AssetBundle/Android")]
     static void CreateAssetBundle()
     {
+        SetAssetBundleName();
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         string adrPath = Application.dataPath + "/StreamingAssets/adr_res";
