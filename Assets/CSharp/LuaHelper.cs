@@ -1,15 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using LuaInterface;
 public class LuaHelper {
 
-    public static ResMgr GetResManager()
+    public static ResManager GetResManager()
     {
-        return GameMgr.Instance.GetManager<ResMgr>("ResMgr");
+        return GameManager.Instance.GetManager<ResManager>("ResManager");
     }
 
-    public static UIMgr GetUIManager()
+    public static UIManager GetUIManager()
     {
-        return GameMgr.Instance.GetManager<UIMgr>("UIMgr");
+        return GameManager.Instance.GetManager<UIManager>("UIManager");
+    }
+
+    public static void AddUpdateEvent(LuaFunction func, LuaTable table)
+    {
+        GameManager.Instance.GetManager<LuaManager>("LuaManager").GetLooper().UpdateEvent.Add(func, table);
+    }
+
+    public static void RemoveUpdateEvent(LuaFunction func, LuaTable table)
+    {
+        GameManager.Instance.GetManager<LuaManager>("LuaManager").GetLooper().UpdateEvent.Remove(func, table);
     }
 }

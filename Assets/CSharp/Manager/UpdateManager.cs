@@ -8,7 +8,7 @@ using System;
 /// <summary>
 /// 资源更新管理器
 /// </summary>
-public class UpdateMgr : MonoBehaviour {
+public class UpdateManager : MonoBehaviour {
 
     Dictionary<string, string> old_ver_dic;
     Dictionary<string, string> new_ver_dic;

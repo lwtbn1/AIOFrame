@@ -2,11 +2,11 @@
 using System;
 using LuaInterface;
 
-public class UIMgrWrap
+public class UIManagerWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(UIMgr), typeof(UnityEngine.MonoBehaviour));
+		L.BeginClass(typeof(UIManager), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("PushPanel", PushPanel);
 		L.RegFunction("HidePanel", HidePanel);
 		L.RegFunction("PushPopups", PushPopups);
@@ -21,10 +21,10 @@ public class UIMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 5);
-			UIMgr obj = (UIMgr)ToLua.CheckObject(L, 1, typeof(UIMgr));
+			UIManager obj = (UIManager)ToLua.CheckObject(L, 1, typeof(UIManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			string arg1 = ToLua.CheckString(L, 3);
-			LuaFunction arg2 = ToLua.CheckLuaFunction(L, 4);
+			LuaTable arg2 = ToLua.CheckLuaTable(L, 4);
 			bool arg3 = LuaDLL.luaL_checkboolean(L, 5);
 			obj.PushPanel(arg0, arg1, arg2, arg3);
 			return 0;
@@ -41,7 +41,7 @@ public class UIMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			UIMgr obj = (UIMgr)ToLua.CheckObject(L, 1, typeof(UIMgr));
+			UIManager obj = (UIManager)ToLua.CheckObject(L, 1, typeof(UIManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			obj.HidePanel(arg0);
 			return 0;
@@ -58,7 +58,7 @@ public class UIMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			UIMgr obj = (UIMgr)ToLua.CheckObject(L, 1, typeof(UIMgr));
+			UIManager obj = (UIManager)ToLua.CheckObject(L, 1, typeof(UIManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			obj.PushPopups(arg0);
 			return 0;

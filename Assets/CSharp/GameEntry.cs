@@ -31,7 +31,7 @@ public class GameEntry : MonoBehaviour {
         {
             yield return true;
         }
-        UpdateMgr updateMgr = GameMgr.Instance.AddManager<UpdateMgr>("UpdateMgr") as UpdateMgr;
+        UpdateManager updateMgr = GameManager.Instance.AddManager<UpdateManager>("UpdateManager") as UpdateManager;
 
         updateMgr.OnStartUpdate = () =>
         {
@@ -44,9 +44,9 @@ public class GameEntry : MonoBehaviour {
         };
         updateMgr.OnEndUpdate = () => {
             updateSlider.value = 1;
-            GameMgr.Instance.AddManager<ResMgr>("ResMgr");
-            GameMgr.Instance.AddManager<UIMgr>("UIMgr");
-            GameMgr.Instance.AddManager<LuaMgr>("LuaMgr");
+            GameManager.Instance.AddManager<ResManager>("ResManager");
+            GameManager.Instance.AddManager<UIManager>("UIManager");
+            GameManager.Instance.AddManager<LuaManager>("LuaManager");
         };
         enabled = false;
 

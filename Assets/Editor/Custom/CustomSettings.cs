@@ -128,8 +128,8 @@ public static class CustomSettings
 
         _GT(typeof(UnityEngine.UI.Image)),
         _GT(typeof(UnityEngine.UI.Button)),
-        _GT(typeof(ResMgr)),
-        _GT(typeof(UIMgr)),
+        _GT(typeof(ResManager)),
+        _GT(typeof(UIManager)),
         _GT(typeof(UnityEngine.SceneManagement.SceneManager)),
         _GT(typeof(LuaHelper)),
         _GT(typeof(LuaBehaviour)),

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using LuaInterface;
-public class UIMgr : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     string curOpenPanel;
     Dictionary<string, GameObject> panelCache = new Dictionary<string, GameObject>();
@@ -44,31 +44,44 @@ public class UIMgr : MonoBehaviour
     /// <param name="panelName"></param>
     /// <param name="func"></param>
     /// <param name="syn"></param>
-    public void PushPanel(string bundleName, string panelName, LuaFunction func, bool syn)
+    public void PushPanel(string bundleName, string panelName, LuaTable table, bool syn)
     {
+        curOpenPanel = panelName;
         if (panelCache.ContainsKey(panelName))
         {
             GameObject willShowPanel = null;
             panelCache.TryGetValue(panelName, out willShowPanel);
             if (willShowPanel != null)
                 willShowPanel.SetActive(true);
+            LuaFunction func = table.GetLuaFunction("Enable");
+            if (func != null)
+                func.Call(willShowPanel);
         }
         else
         {
-            ResMgr resMgr = GameMgr.Instance.GetManager<ResMgr>("ResMgr");
+            ResManager resMgr = GameManager.Instance.GetManager<ResManager>("ResManager");
             if (!syn)
             {
                 resMgr.LoadPanelAsyn(bundleName, panelName, (obj)=>{
                     obj.transform.SetParent(PanelRoot,false);
+                    if (!panelCache.ContainsKey(panelName))
+                        panelCache.Add(panelName, obj);
+
                     obj.SetActive(true);
                     obj.name = panelName;
+                    obj.AddComponent<LuaBehaviour>();
+                    LuaFunction func = table.GetLuaFunction("OnCreate");
                     if (func != null)
                         func.Call(obj);
+                    
                 });
             }
             else
             {
                 GameObject willShowPanel = resMgr.LoadPanelSyn(bundleName, panelName);
+                if (!panelCache.ContainsKey(panelName))
+                    panelCache.Add(panelName, willShowPanel);
+                LuaFunction func = table.GetLuaFunction("OnCreate");
                 if (func != null)
                     func.Call(willShowPanel);
             }

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using LuaInterface;
-    public class ResMgr : MonoBehaviour
+    public class ResManager : MonoBehaviour
     {
 
         private Dictionary<string, AssetBundle> ui_bundles = new Dictionary<string, AssetBundle>();

@@ -9,6 +9,8 @@ public class LuaHelperWrap
 		L.BeginClass(typeof(LuaHelper), typeof(System.Object));
 		L.RegFunction("GetResManager", GetResManager);
 		L.RegFunction("GetUIManager", GetUIManager);
+		L.RegFunction("AddUpdateEvent", AddUpdateEvent);
+		L.RegFunction("RemoveUpdateEvent", RemoveUpdateEvent);
 		L.RegFunction("New", _CreateLuaHelper);
 		L.RegFunction("__tostring", Lua_ToString);
 		L.EndClass();
@@ -44,7 +46,7 @@ public class LuaHelperWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 0);
-			ResMgr o = LuaHelper.GetResManager();
+			ResManager o = LuaHelper.GetResManager();
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -60,9 +62,43 @@ public class LuaHelperWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 0);
-			UIMgr o = LuaHelper.GetUIManager();
+			UIManager o = LuaHelper.GetUIManager();
 			ToLua.Push(L, o);
 			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddUpdateEvent(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			LuaFunction arg0 = ToLua.CheckLuaFunction(L, 1);
+			LuaTable arg1 = ToLua.CheckLuaTable(L, 2);
+			LuaHelper.AddUpdateEvent(arg0, arg1);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int RemoveUpdateEvent(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			LuaFunction arg0 = ToLua.CheckLuaFunction(L, 1);
+			LuaTable arg1 = ToLua.CheckLuaTable(L, 2);
+			LuaHelper.RemoveUpdateEvent(arg0, arg1);
+			return 0;
 		}
 		catch(Exception e)
 		{

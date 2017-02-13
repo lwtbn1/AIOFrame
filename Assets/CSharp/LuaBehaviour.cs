@@ -9,6 +9,7 @@ public class LuaBehaviour : MonoBehaviour
 
     protected void Awake()
     {
+        
         Util.CallMethod(name, "Awake", gameObject);
     }
     protected void OnEnable()

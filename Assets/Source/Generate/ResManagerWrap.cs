@@ -2,11 +2,11 @@
 using System;
 using LuaInterface;
 
-public class ResMgrWrap
+public class ResManagerWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(ResMgr), typeof(UnityEngine.MonoBehaviour));
+		L.BeginClass(typeof(ResManager), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("LoadSpriteSyn", LoadSpriteSyn);
 		L.RegFunction("LoadSpriteAsyn", LoadSpriteAsyn);
 		L.RegFunction("LoadUIBundlesAsyn", LoadUIBundlesAsyn);
@@ -28,7 +28,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			string arg1 = ToLua.CheckString(L, 3);
 			UnityEngine.Sprite o = obj.LoadSpriteSyn(arg0, arg1);
@@ -47,7 +47,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 4);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			string arg1 = ToLua.CheckString(L, 3);
 			System.Action<UnityEngine.Sprite> arg2 = null;
@@ -79,7 +79,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			System.Collections.Generic.List<string> arg0 = (System.Collections.Generic.List<string>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.List<string>));
 			System.Collections.IEnumerator o = obj.LoadUIBundlesAsyn(arg0);
 			ToLua.Push(L, o);
@@ -97,7 +97,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			System.Collections.Generic.List<string> arg0 = (System.Collections.Generic.List<string>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.List<string>));
 			obj.UnLoadUIBundles(arg0);
 			return 0;
@@ -114,7 +114,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			string arg1 = ToLua.CheckString(L, 3);
 			UnityEngine.GameObject o = obj.LoadPanelSyn(arg0, arg1);
@@ -133,7 +133,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 4);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			string arg1 = ToLua.CheckString(L, 3);
 			System.Action<UnityEngine.GameObject> arg2 = null;
@@ -164,7 +164,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			UnityEngine.AssetBundle o = obj.getUIBundle(arg0);
 			ToLua.Push(L, o);
@@ -182,7 +182,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 			obj.UnloadUIBundle(arg0, arg1);
@@ -200,7 +200,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			UnityEngine.AssetBundle o = obj.getPanelBundle(arg0);
 			ToLua.Push(L, o);
@@ -218,7 +218,7 @@ public class ResMgrWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			ResMgr obj = (ResMgr)ToLua.CheckObject(L, 1, typeof(ResMgr));
+			ResManager obj = (ResManager)ToLua.CheckObject(L, 1, typeof(ResManager));
 			string arg0 = ToLua.CheckString(L, 2);
 			bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 			obj.UnloadPanelBundl(arg0, arg1);

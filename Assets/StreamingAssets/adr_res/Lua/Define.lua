@@ -41,6 +41,8 @@ TouchPhase 		= UnityEngine.TouchPhase
 AnimationBlendMode = UnityEngine.AnimationBlendMode
 
 Image = UnityEngine.UI.Image
+Button = UnityEngine.UI.Button
+
 resMgr = LuaHelper.GetResManager()
 uiMgr =  LuaHelper.GetUIManager()
 sceneMgr = UnityEngine.SceneManagement.SceneManager

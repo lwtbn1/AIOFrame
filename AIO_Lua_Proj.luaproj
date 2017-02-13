@@ -22,20 +22,21 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Lua\" />
-    <Folder Include="Lua\Control\" />
-    <Folder Include="Lua\Manager\" />
-    <Folder Include="Lua\SceneConf\" />
-    <Folder Include="Lua\View\" />
+    <Folder Include="Assets\" />
+    <Folder Include="Assets\Lua\" />
+    <Folder Include="Assets\Lua\Control\" />
+    <Folder Include="Assets\Lua\Manager\" />
+    <Folder Include="Assets\Lua\SceneConf\" />
+    <Folder Include="Assets\Lua\View\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Lua\Manager\CtrlMgr.lua" />
-    <Compile Include="Lua\Control\MainCtrl.lua" />
-    <Compile Include="Lua\Util.lua" />
-    <Compile Include="Lua\Define.lua" />
-    <Compile Include="Lua\Main.lua" />
-    <Compile Include="Lua\View\MainPanel.lua" />
-    <Compile Include="Lua\Manager\ViewMgr.lua" />
+    <Compile Include="Assets\Lua\Manager\CtrlMgr.lua" />
+    <Compile Include="Assets\Lua\Control\MainCtrl.lua" />
+    <Compile Include="Assets\Lua\Util.lua" />
+    <Compile Include="Assets\Lua\Define.lua" />
+    <Compile Include="Assets\Lua\Main.lua" />
+    <Compile Include="Assets\Lua\View\MainPanel.lua" />
+    <Compile Include="Assets\Lua\Manager\ViewMgr.lua" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>

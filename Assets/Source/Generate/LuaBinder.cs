@@ -10,8 +10,8 @@ public static class LuaBinder
 		float t = Time.realtimeSinceStartup;
 		L.BeginModule(null);
 		DebuggerWrap.Register(L);
-		ResMgrWrap.Register(L);
-		UIMgrWrap.Register(L);
+		ResManagerWrap.Register(L);
+		UIManagerWrap.Register(L);
 		LuaHelperWrap.Register(L);
 		LuaBehaviourWrap.Register(L);
 		L.BeginModule("UnityEngine");
@@ -70,8 +70,10 @@ public static class LuaBinder
 		UnityEngine_RenderTextureWrap.Register(L);
 		L.BeginModule("UI");
 		UnityEngine_UI_ImageWrap.Register(L);
+		UnityEngine_UI_ButtonWrap.Register(L);
 		UnityEngine_UI_MaskableGraphicWrap.Register(L);
 		UnityEngine_UI_GraphicWrap.Register(L);
+		UnityEngine_UI_SelectableWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("SceneManagement");
 		UnityEngine_SceneManagement_SceneManagerWrap.Register(L);
