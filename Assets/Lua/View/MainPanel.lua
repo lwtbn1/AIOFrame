@@ -1,23 +1,24 @@
 --region *.lua
 --Date
 --此文件由[BabeLua]插件自动生成
-module("View/MainPanel", package.seeall)
 MainPanel = {};
 local this = MainPanel;
-local gameObject = nil;
-local transform = nil;
+this.ui = {};
+this.gameObject = nil;
+this.transform = nil;
 
-function MainPanel.Init(obj)
-    gameObject = obj;
-    transform = gameObject.transform;
+function MainPanel.Awake(obj)
+    this.gameObject = obj;
+    this.transform = obj.transform;
 
-    this.img_1 = transform:FindChild("img_1"):GetComponent("Image");
-    this.img_2 = transform:FindChild("img_2"):GetComponent("Image");
-    this.img_3 = transform:FindChild("img_3"):GetComponent("Image");
-    this.CloseButton = transform:FindChild("CloseButton").gameObject;
-
-    print("MainPanel.Awake............");
+    this.ui.img_1 = this.transform:FindChild("img_1"):GetComponent("Image");
+    this.ui.img_2 = this.transform:FindChild("img_2"):GetComponent("Image");
+    this.ui.img_3 = this.transform:FindChild("img_3"):GetComponent("Image");
+    this.ui.CloseButton = this.transform:FindChild("CloseButton").gameObject;
+    print("MainPanel.Awake.................");
+    
 end
+
 
 function MainPanel.OnEnable(obj)
 
@@ -38,5 +39,5 @@ function MainPanel.OnDestroy(obj)
 
 end
 
-return MainPanel;
+return this;
 --endregion

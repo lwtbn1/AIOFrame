@@ -22,4 +22,10 @@ public class LuaHelper {
     {
         GameManager.Instance.GetManager<LuaManager>("LuaManager").GetLooper().UpdateEvent.Remove(func, table);
     }
+
+    public static LuaTable GetModule(string lua)
+    {
+        object[] ret = GameManager.Instance.GetManager<LuaManager>("LuaManager").DoString(lua);
+        return ret[0] as LuaTable;
+    }
 }

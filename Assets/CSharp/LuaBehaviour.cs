@@ -6,15 +6,13 @@ using UnityEngine.UI;
 public class LuaBehaviour : MonoBehaviour
 {
     private Dictionary<string, LuaFunction> buttons = new Dictionary<string, LuaFunction>();
-
     protected void Awake()
     {
-        
         Util.CallMethod(name, "Awake", gameObject);
     }
     protected void OnEnable()
     {
-        Util.CallMethod(name, "OnEnable", gameObject);
+        Util.CallMethod( name, "OnEnable", gameObject);
     }
     protected void Start()
     {

@@ -26,5 +26,10 @@ class LuaManager : LuaClient
         
         return null;
     }
+
+    public object[] DoString(string lua)
+    {
+        return luaState.DoString(lua);
+    }
 }
 

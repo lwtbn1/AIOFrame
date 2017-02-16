@@ -155,12 +155,13 @@ public class SocketClient {
     /// </summary>
     void OnReceive(byte[] bytes, int length) {
         memStream.Seek(0, SeekOrigin.End);
-        memStream.Write(bytes, 0, length);
+        memStream.Write(bytes, 0, length);   //将bytes读入memStream的最后
         //Reset to beginning
         memStream.Seek(0, SeekOrigin.Begin);
-        while (RemainingBytes() > 2) {
-            ushort messageLen = reader.ReadUInt16();
-            if (RemainingBytes() >= messageLen) {
+        while (RemainingBytes() > 2) {              //while可处理多个消息
+            //消息长度
+            ushort messageLen = reader.ReadUInt16(); //获取消息的总长度
+            if (RemainingBytes() >= messageLen) {       //如果剩下的长度大于消息总长度（即消息接受完毕），则直接进行消息处理
                 MemoryStream ms = new MemoryStream();
                 BinaryWriter writer = new BinaryWriter(ms);
                 writer.Write(reader.ReadBytes(messageLen));
@@ -168,11 +169,12 @@ public class SocketClient {
                 OnReceivedMessage(ms);
             } else {
                 //Back up the position two bytes
-                memStream.Position = memStream.Position - 2;
+                memStream.Position = memStream.Position - 2;  //如果消息没有接受完，则将position回退2个字节，
                 break;
             }
         }
         //Create a new stream with any leftover bytes
+        //将剩余的字节写入memStream中
         byte[] leftover = reader.ReadBytes((int)RemainingBytes());
         memStream.SetLength(0);     //Clear
         memStream.Write(leftover, 0, leftover.Length);
