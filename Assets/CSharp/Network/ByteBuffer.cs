@@ -103,7 +103,10 @@ public class ByteBuffer
     {
         return (int)reader.ReadInt32();
     }
-
+    public uint ReadUInt()
+    {
+        return reader.ReadUInt32();
+    }
     public ushort ReadShort()
     {
         return (ushort)reader.ReadInt16();

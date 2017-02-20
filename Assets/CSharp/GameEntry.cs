@@ -46,6 +46,7 @@ public class GameEntry : MonoBehaviour {
             updateSlider.value = 1;
             GameManager.Instance.AddManager<ResManager>("ResManager");
             GameManager.Instance.AddManager<UIManager>("UIManager");
+            GameManager.Instance.AddManager<NetworkManager>("NetworkManager");
             GameManager.Instance.AddManager<LuaManager>("LuaManager");
         };
         enabled = false;

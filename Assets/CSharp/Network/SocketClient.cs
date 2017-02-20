@@ -64,7 +64,6 @@ public class SocketClient {
     void OnConnect(IAsyncResult asr) {
         outStream = client.GetStream();
         client.GetStream().BeginRead(byteBuffer, 0, MAX_READ, new AsyncCallback(OnRead), null);
-        NetworkManager.AddEvent(Protocal.Connect, new ByteBuffer());
     }
 
     /// <summary>
@@ -123,7 +122,6 @@ public class SocketClient {
 
         ByteBuffer buffer = new ByteBuffer();
         buffer.WriteShort((ushort)protocal);
-        NetworkManager.AddEvent(protocal, buffer);
         Debug.LogError("Connection was closed by the server:>" + msg + " Distype:>" + dis);
     }
 
@@ -160,7 +158,7 @@ public class SocketClient {
         memStream.Seek(0, SeekOrigin.Begin);
         while (RemainingBytes() > 2) {              //while可处理多个消息
             //消息长度
-            ushort messageLen = reader.ReadUInt16(); //获取消息的总长度
+            int messageLen = reader.ReadInt32();    //获取消息的总长度
             if (RemainingBytes() >= messageLen) {       //如果剩下的长度大于消息总长度（即消息接受完毕），则直接进行消息处理
                 MemoryStream ms = new MemoryStream();
                 BinaryWriter writer = new BinaryWriter(ms);
@@ -197,8 +195,8 @@ public class SocketClient {
         //int msglen = message.Length;
 
         ByteBuffer buffer = new ByteBuffer(message);
-        int mainId = buffer.ReadShort();
-        NetworkManager.AddEvent(mainId, buffer);
+        RecvData data = RecvData.ParseRecv(buffer);
+        NetworkManager.AddEvent(data);
     }
 
 
@@ -223,15 +221,15 @@ public class SocketClient {
     /// <summary>
     /// 发送连接请求
     /// </summary>
-    public void SendConnect() {
-        //ConnectServer(AppConst.SocketAddress, AppConst.SocketPort);
+    public void SendConnect(string ip, int port)
+    {
+        ConnectServer(ip, port);
     }
 
     /// <summary>
     /// 发送消息
     /// </summary>
-    public void SendMessage(ByteBuffer buffer) {
-        SessionSend(buffer.ToBytes());
-        buffer.Close();
+    public void SendMessage(byte[] data) {
+        SessionSend(data);
     }
 }

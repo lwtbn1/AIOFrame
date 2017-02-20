@@ -1,5 +1,5 @@
 require "Define"
-require "Util"
+require "Common/Util"
 require "Manager/CtrlMgr"
 require "Manager/ViewMgr"
 

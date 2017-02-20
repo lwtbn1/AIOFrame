@@ -13,6 +13,11 @@ public class LuaHelper {
         return GameManager.Instance.GetManager<UIManager>("UIManager");
     }
 
+    public static NetworkManager GetNetworkManager()
+    {
+        return GameManager.Instance.GetManager<NetworkManager>("NetworkManager");
+    }
+
     public static void AddUpdateEvent(LuaFunction func, LuaTable table)
     {
         GameManager.Instance.GetManager<LuaManager>("LuaManager").GetLooper().UpdateEvent.Add(func, table);

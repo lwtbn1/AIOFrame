@@ -130,6 +130,7 @@ public static class CustomSettings
         _GT(typeof(UnityEngine.UI.Button)),
         _GT(typeof(ResManager)),
         _GT(typeof(UIManager)),
+        _GT(typeof(NetworkManager)),
         _GT(typeof(UnityEngine.SceneManagement.SceneManager)),
         _GT(typeof(LuaHelper)),
         _GT(typeof(LuaBehaviour)),

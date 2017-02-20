@@ -9,6 +9,7 @@ public class LuaHelperWrap
 		L.BeginClass(typeof(LuaHelper), typeof(System.Object));
 		L.RegFunction("GetResManager", GetResManager);
 		L.RegFunction("GetUIManager", GetUIManager);
+		L.RegFunction("GetNetworkManager", GetNetworkManager);
 		L.RegFunction("AddUpdateEvent", AddUpdateEvent);
 		L.RegFunction("RemoveUpdateEvent", RemoveUpdateEvent);
 		L.RegFunction("GetModule", GetModule);
@@ -64,6 +65,22 @@ public class LuaHelperWrap
 		{
 			ToLua.CheckArgsCount(L, 0);
 			UIManager o = LuaHelper.GetUIManager();
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetNetworkManager(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			NetworkManager o = LuaHelper.GetNetworkManager();
 			ToLua.Push(L, o);
 			return 1;
 		}

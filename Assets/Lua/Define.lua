@@ -1,5 +1,5 @@
+require "NetDefine"
 -----全局定义----
-
 object			= System.Object
 Type			= System.Type
 Object          = UnityEngine.Object
@@ -46,6 +46,7 @@ Button = UnityEngine.UI.Button
 resMgr = LuaHelper.GetResManager()
 uiMgr =  LuaHelper.GetUIManager()
 sceneMgr = UnityEngine.SceneManagement.SceneManager
+networkMgr = LuaHelper.GetNetworkManager()
 
 CtrlNames = {
 	Main = "MainCtrl",

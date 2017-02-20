@@ -29,14 +29,12 @@ function MainPanel.Start(obj)
 
 end
 function MainPanel.OnDisable(obj)
-
-
+    print("mainPanel OnDisable ......");
 end
 
 
 function MainPanel.OnDestroy(obj)
-
-
+    print("mainPanel OnDisable ......");
 end
 
 return this;

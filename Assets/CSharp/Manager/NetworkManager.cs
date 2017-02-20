@@ -9,8 +9,10 @@ public class NetworkManager : MonoBehaviour
 
     private SocketClient socket;
     static readonly object m_lockObject = new object();
-    static Queue<KeyValuePair<int, ByteBuffer>> mEvents = new Queue<KeyValuePair<int, ByteBuffer>>();
-
+    static Queue<RecvData> recvQueue = new Queue<RecvData>();
+    static Queue<SendData> sendQueue = new Queue<SendData>();
+    public static Dictionary<uint, LuaFunction> recvCallBackDict = new Dictionary<uint, LuaFunction>();
+    public static Dictionary<int, LuaFunction> foreverCallBackDict = new Dictionary<int, LuaFunction>();
     SocketClient SocketClient
     {
         get
@@ -31,16 +33,6 @@ public class NetworkManager : MonoBehaviour
         SocketClient.OnRegister();
     }
 
-    public void OnInit()
-    {
-        CallMethod("Start");
-    }
-
-    public void Unload()
-    {
-        CallMethod("Unload");
-    }
-
     /// <summary>
     /// 执行Lua方法
     /// </summary>
@@ -50,11 +42,11 @@ public class NetworkManager : MonoBehaviour
     }
 
     ///------------------------------------------------------------------------------------
-    public static void AddEvent(int _event, ByteBuffer data)
+    public static void AddEvent(RecvData data)
     {
         lock (m_lockObject)
         {
-            mEvents.Enqueue(new KeyValuePair<int, ByteBuffer>(_event, data));
+            recvQueue.Enqueue(data);
         }
     }
 
@@ -63,32 +55,59 @@ public class NetworkManager : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (mEvents.Count > 0)
+        if (recvQueue.Count > 0)
         {
-            while (mEvents.Count > 0)
+            while (recvQueue.Count > 0)
             {
-                KeyValuePair<int, ByteBuffer> _event = mEvents.Dequeue();
+                RecvData data = recvQueue.Dequeue();
                 //将消息发送给对应的逻辑
+                if (recvCallBackDict.ContainsKey(data.ix))
+                {
+                    recvCallBackDict[data.ix].Call(data);
+                    recvCallBackDict.Remove(data.ix);
+                }
+                int key = (int)data.cmd << 8 + data.funCode;
+                if (foreverCallBackDict.ContainsKey(key))
+                    foreverCallBackDict[key].Call(data);
             }
+        }
+
+        if (sendQueue.Count > 0)     //对于发送数据每一帧只处理一个消息
+        {
+            SendData data = sendQueue.Dequeue();
+            socket.SendMessage(data.GetSendByte());
         }
     }
 
     /// <summary>
     /// 发送链接请求
     /// </summary>
-    public void SendConnect()
+    public void SendConnect(string ip, int port)
     {
-        SocketClient.SendConnect();
+        SocketClient.SendConnect(ip, port);
     }
 
     /// <summary>
     /// 发送SOCKET消息
     /// </summary>
-    public void SendMessage(ByteBuffer buffer)
-    {
-        SocketClient.SendMessage(buffer);
-    }
 
+    public void SendMessage(byte cmd, byte funCode, byte[] data, LuaFunction callBack)
+    {
+        lock (m_lockObject)
+        {
+            SendData sendData = new SendData(cmd, funCode, data, callBack);
+            sendQueue.Enqueue(sendData);
+        }
+        
+    }
+    public void RegistForeverCallBack(int cmd, int funCode, LuaFunction callBack)
+    {
+        lock (m_lockObject)
+        {
+            int key = cmd << 8 + funCode;
+            foreverCallBackDict.Add(key, callBack);
+        }
+    }
     /// <summary>
     /// 析构函数
     /// </summary>
