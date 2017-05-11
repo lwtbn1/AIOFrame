@@ -20,10 +20,16 @@ public static class DelegateFactory
 		dict.Add(typeof(System.Action), System_Action);
 		dict.Add(typeof(UnityEngine.Events.UnityAction), UnityEngine_Events_UnityAction);
 		dict.Add(typeof(UnityEngine.Camera.CameraCallback), UnityEngine_Camera_CameraCallback);
-		dict.Add(typeof(UnityEngine.Application.LogCallback), UnityEngine_Application_LogCallback);
+		dict.Add(typeof(UnityEngine.Application.LowMemoryCallback), UnityEngine_Application_LowMemoryCallback);
 		dict.Add(typeof(UnityEngine.Application.AdvertisingIdentifierCallback), UnityEngine_Application_AdvertisingIdentifierCallback);
+		dict.Add(typeof(UnityEngine.Application.LogCallback), UnityEngine_Application_LogCallback);
 		dict.Add(typeof(UnityEngine.AudioClip.PCMReaderCallback), UnityEngine_AudioClip_PCMReaderCallback);
 		dict.Add(typeof(UnityEngine.AudioClip.PCMSetPositionCallback), UnityEngine_AudioClip_PCMSetPositionCallback);
+		dict.Add(typeof(System.Action<UnityEngine.Sprite>), System_Action_UnityEngine_Sprite);
+		dict.Add(typeof(System.Action<UnityEngine.GameObject>), System_Action_UnityEngine_GameObject);
+		dict.Add(typeof(UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.LoadSceneMode>), UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_LoadSceneMode);
+		dict.Add(typeof(UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene>), UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene);
+		dict.Add(typeof(UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene>), UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene);
 	}
 
     [NoToLuaAttribute]
@@ -129,30 +135,25 @@ public static class DelegateFactory
 		return d;
 	}
 
-	class UnityEngine_Application_LogCallback_Event : LuaDelegate
+	class UnityEngine_Application_LowMemoryCallback_Event : LuaDelegate
 	{
-		public UnityEngine_Application_LogCallback_Event(LuaFunction func) : base(func) { }
+		public UnityEngine_Application_LowMemoryCallback_Event(LuaFunction func) : base(func) { }
 
-		public void Call(string param0,string param1,UnityEngine.LogType param2)
+		public void Call()
 		{
-			func.BeginPCall();
-			func.Push(param0);
-			func.Push(param1);
-			func.Push(param2);
-			func.PCall();
-			func.EndPCall();
+			func.Call();
 		}
 	}
 
-	public static Delegate UnityEngine_Application_LogCallback(LuaFunction func)
+	public static Delegate UnityEngine_Application_LowMemoryCallback(LuaFunction func)
 	{
 		if (func == null)
 		{
-			UnityEngine.Application.LogCallback fn = delegate { };
+			UnityEngine.Application.LowMemoryCallback fn = delegate { };
 			return fn;
 		}
 
-		UnityEngine.Application.LogCallback d = (new UnityEngine_Application_LogCallback_Event(func)).Call;
+		UnityEngine.Application.LowMemoryCallback d = (new UnityEngine_Application_LowMemoryCallback_Event(func)).Call;
 		return d;
 	}
 
@@ -180,6 +181,33 @@ public static class DelegateFactory
 		}
 
 		UnityEngine.Application.AdvertisingIdentifierCallback d = (new UnityEngine_Application_AdvertisingIdentifierCallback_Event(func)).Call;
+		return d;
+	}
+
+	class UnityEngine_Application_LogCallback_Event : LuaDelegate
+	{
+		public UnityEngine_Application_LogCallback_Event(LuaFunction func) : base(func) { }
+
+		public void Call(string param0,string param1,UnityEngine.LogType param2)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UnityEngine_Application_LogCallback(LuaFunction func)
+	{
+		if (func == null)
+		{
+			UnityEngine.Application.LogCallback fn = delegate { };
+			return fn;
+		}
+
+		UnityEngine.Application.LogCallback d = (new UnityEngine_Application_LogCallback_Event(func)).Call;
 		return d;
 	}
 
@@ -230,6 +258,133 @@ public static class DelegateFactory
 		}
 
 		UnityEngine.AudioClip.PCMSetPositionCallback d = (new UnityEngine_AudioClip_PCMSetPositionCallback_Event(func)).Call;
+		return d;
+	}
+
+	class System_Action_UnityEngine_Sprite_Event : LuaDelegate
+	{
+		public System_Action_UnityEngine_Sprite_Event(LuaFunction func) : base(func) { }
+
+		public void Call(UnityEngine.Sprite param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate System_Action_UnityEngine_Sprite(LuaFunction func)
+	{
+		if (func == null)
+		{
+			System.Action<UnityEngine.Sprite> fn = delegate { };
+			return fn;
+		}
+
+		System.Action<UnityEngine.Sprite> d = (new System_Action_UnityEngine_Sprite_Event(func)).Call;
+		return d;
+	}
+
+	class System_Action_UnityEngine_GameObject_Event : LuaDelegate
+	{
+		public System_Action_UnityEngine_GameObject_Event(LuaFunction func) : base(func) { }
+
+		public void Call(UnityEngine.GameObject param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate System_Action_UnityEngine_GameObject(LuaFunction func)
+	{
+		if (func == null)
+		{
+			System.Action<UnityEngine.GameObject> fn = delegate { };
+			return fn;
+		}
+
+		System.Action<UnityEngine.GameObject> d = (new System_Action_UnityEngine_GameObject_Event(func)).Call;
+		return d;
+	}
+
+	class UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_LoadSceneMode_Event : LuaDelegate
+	{
+		public UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_LoadSceneMode_Event(LuaFunction func) : base(func) { }
+
+		public void Call(UnityEngine.SceneManagement.Scene param0,UnityEngine.SceneManagement.LoadSceneMode param1)
+		{
+			func.BeginPCall();
+			func.PushValue(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_LoadSceneMode(LuaFunction func)
+	{
+		if (func == null)
+		{
+			UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.LoadSceneMode> fn = delegate { };
+			return fn;
+		}
+
+		UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.LoadSceneMode> d = (new UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_LoadSceneMode_Event(func)).Call;
+		return d;
+	}
+
+	class UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_Event : LuaDelegate
+	{
+		public UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_Event(LuaFunction func) : base(func) { }
+
+		public void Call(UnityEngine.SceneManagement.Scene param0)
+		{
+			func.BeginPCall();
+			func.PushValue(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene(LuaFunction func)
+	{
+		if (func == null)
+		{
+			UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene> fn = delegate { };
+			return fn;
+		}
+
+		UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene> d = (new UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_Event(func)).Call;
+		return d;
+	}
+
+	class UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene_Event : LuaDelegate
+	{
+		public UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene_Event(LuaFunction func) : base(func) { }
+
+		public void Call(UnityEngine.SceneManagement.Scene param0,UnityEngine.SceneManagement.Scene param1)
+		{
+			func.BeginPCall();
+			func.PushValue(param0);
+			func.PushValue(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene(LuaFunction func)
+	{
+		if (func == null)
+		{
+			UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene> fn = delegate { };
+			return fn;
+		}
+
+		UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene> d = (new UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene_Event(func)).Call;
 		return d;
 	}
 

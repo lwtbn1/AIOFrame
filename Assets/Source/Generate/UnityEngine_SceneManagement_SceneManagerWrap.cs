@@ -11,11 +11,12 @@ public class UnityEngine_SceneManagement_SceneManagerWrap
 		L.RegFunction("SetActiveScene", SetActiveScene);
 		L.RegFunction("GetSceneByPath", GetSceneByPath);
 		L.RegFunction("GetSceneByName", GetSceneByName);
+		L.RegFunction("GetSceneByBuildIndex", GetSceneByBuildIndex);
 		L.RegFunction("GetSceneAt", GetSceneAt);
 		L.RegFunction("LoadScene", LoadScene);
 		L.RegFunction("LoadSceneAsync", LoadSceneAsync);
 		L.RegFunction("CreateScene", CreateScene);
-		L.RegFunction("UnloadScene", UnloadScene);
+		L.RegFunction("UnloadSceneAsync", UnloadSceneAsync);
 		L.RegFunction("MergeScenes", MergeScenes);
 		L.RegFunction("MoveGameObjectToScene", MoveGameObjectToScene);
 		L.RegFunction("New", _CreateUnityEngine_SceneManagement_SceneManager);
@@ -110,6 +111,23 @@ public class UnityEngine_SceneManagement_SceneManagerWrap
 			ToLua.CheckArgsCount(L, 1);
 			string arg0 = ToLua.CheckString(L, 1);
 			UnityEngine.SceneManagement.Scene o = UnityEngine.SceneManagement.SceneManager.GetSceneByName(arg0);
+			ToLua.PushValue(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetSceneByBuildIndex(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			int arg0 = (int)LuaDLL.luaL_checknumber(L, 1);
+			UnityEngine.SceneManagement.Scene o = UnityEngine.SceneManagement.SceneManager.GetSceneByBuildIndex(arg0);
 			ToLua.PushValue(L, o);
 			return 1;
 		}
@@ -246,7 +264,7 @@ public class UnityEngine_SceneManagement_SceneManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int UnloadScene(IntPtr L)
+	static int UnloadSceneAsync(IntPtr L)
 	{
 		try
 		{
@@ -255,27 +273,27 @@ public class UnityEngine_SceneManagement_SceneManagerWrap
 			if (count == 1 && TypeChecker.CheckTypes(L, 1, typeof(UnityEngine.SceneManagement.Scene)))
 			{
 				UnityEngine.SceneManagement.Scene arg0 = (UnityEngine.SceneManagement.Scene)ToLua.ToObject(L, 1);
-				bool o = UnityEngine.SceneManagement.SceneManager.UnloadScene(arg0);
-				LuaDLL.lua_pushboolean(L, o);
+				UnityEngine.AsyncOperation o = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(arg0);
+				ToLua.PushObject(L, o);
 				return 1;
 			}
 			else if (count == 1 && TypeChecker.CheckTypes(L, 1, typeof(string)))
 			{
 				string arg0 = ToLua.ToString(L, 1);
-				bool o = UnityEngine.SceneManagement.SceneManager.UnloadScene(arg0);
-				LuaDLL.lua_pushboolean(L, o);
+				UnityEngine.AsyncOperation o = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(arg0);
+				ToLua.PushObject(L, o);
 				return 1;
 			}
 			else if (count == 1 && TypeChecker.CheckTypes(L, 1, typeof(int)))
 			{
 				int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
-				bool o = UnityEngine.SceneManagement.SceneManager.UnloadScene(arg0);
-				LuaDLL.lua_pushboolean(L, o);
+				UnityEngine.AsyncOperation o = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(arg0);
+				ToLua.PushObject(L, o);
 				return 1;
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: UnityEngine.SceneManagement.SceneManager.UnloadScene");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync");
 			}
 		}
 		catch(Exception e)

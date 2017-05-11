@@ -8,6 +8,7 @@ public class UnityEngine_TransformWrap
 	{
 		L.BeginClass(typeof(UnityEngine.Transform), typeof(UnityEngine.Component));
 		L.RegFunction("SetParent", SetParent);
+		L.RegFunction("SetPositionAndRotation", SetPositionAndRotation);
 		L.RegFunction("Translate", Translate);
 		L.RegFunction("Rotate", Rotate);
 		L.RegFunction("RotateAround", RotateAround);
@@ -78,6 +79,24 @@ public class UnityEngine_TransformWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: UnityEngine.Transform.SetParent");
 			}
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetPositionAndRotation(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UnityEngine.Transform obj = (UnityEngine.Transform)ToLua.CheckObject(L, 1, typeof(UnityEngine.Transform));
+			UnityEngine.Vector3 arg0 = ToLua.ToVector3(L, 2);
+			UnityEngine.Quaternion arg1 = ToLua.ToQuaternion(L, 3);
+			obj.SetPositionAndRotation(arg0, arg1);
+			return 0;
 		}
 		catch(Exception e)
 		{
