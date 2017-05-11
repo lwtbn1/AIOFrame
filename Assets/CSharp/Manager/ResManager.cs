@@ -26,7 +26,7 @@ using LuaInterface;
         {
             AssetBundle bundle = getUIBundle(atlas);
             if (bundle == null)
-                bundle = AssetBundle.LoadFromFile(GameDef.UIPathRoot + "/" + atlas + ".u3d");
+                bundle = AssetBundle.LoadFromFile(GameDef.UIPathRoot + "/" + atlas + GameDef.BundleExtName);
             cacheUIBundle(atlas, bundle);
             Sprite sp = bundle.LoadAsset<Sprite>(sp_name);
 
@@ -44,7 +44,7 @@ using LuaInterface;
             AssetBundle bundle = getUIBundle(atlas);
             if (bundle == null)
             {
-                AssetBundleCreateRequest bundleReq = AssetBundle.LoadFromFileAsync(GameDef.UIPathRoot + "/" + atlas + ".u3d");
+                AssetBundleCreateRequest bundleReq = AssetBundle.LoadFromFileAsync(GameDef.UIPathRoot + "/" + atlas + GameDef.BundleExtName);
                 while (!bundleReq.isDone)
                     yield return false;
                 bundle = bundleReq.assetBundle;
@@ -70,7 +70,7 @@ using LuaInterface;
                 AssetBundle bundle = getUIBundle(atlas);
                 if (bundle == null)
                 {
-                    AssetBundleCreateRequest bundleReq = AssetBundle.LoadFromFileAsync(GameDef.UIPathRoot + "/" + atlas + ".u3d");
+                    AssetBundleCreateRequest bundleReq = AssetBundle.LoadFromFileAsync(GameDef.UIPathRoot + "/" + atlas + GameDef.BundleExtName);
                     while (!bundleReq.isDone)
                         yield return false;
                     bundle = bundleReq.assetBundle;
@@ -100,7 +100,7 @@ using LuaInterface;
         {
             AssetBundle bundle = getPanelBundle(bundl_name);
             if (bundle == null)
-                bundle = AssetBundle.LoadFromFile(GameDef.PanelPathRoot + "/" + bundl_name + ".u3d");
+                bundle = AssetBundle.LoadFromFile(GameDef.PanelPathRoot + "/" + bundl_name + GameDef.BundleExtName);
             cachePanelBundle(bundl_name, bundle);
             GameObject panel = bundle.LoadAsset<GameObject>(panel_name);
 
@@ -117,7 +117,7 @@ using LuaInterface;
             AssetBundle bundle = getPanelBundle(bundl_name);
             if (bundle == null)
             {
-                AssetBundleCreateRequest bundleReq = AssetBundle.LoadFromFileAsync(GameDef.PanelPathRoot + bundl_name + ".u3d");
+                AssetBundleCreateRequest bundleReq = AssetBundle.LoadFromFileAsync(GameDef.PanelPathRoot + bundl_name + GameDef.BundleExtName);
                 while (!bundleReq.isDone)
                     yield return false;
                 bundle = bundleReq.assetBundle;
@@ -132,7 +132,6 @@ using LuaInterface;
 
         public void LoadPanelAsyn(string bundl_name, string panel_name, Action<GameObject> callBack)
         {
-
             StartCoroutine(LoadPanelAsynYed(bundl_name, panel_name, callBack));
         }
 

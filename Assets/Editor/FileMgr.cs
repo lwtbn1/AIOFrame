@@ -63,6 +63,29 @@ public class FileMgr : MonoBehaviour {
         {
             CopyDirectory(dirs[j].FullName, target.FullName + @"\" + dirs[j].Name);
         }
-    } 
+    }
+    public static void RecursiveDir(string path, ref List<string> allFilePath, bool isFirstRun = true)
+    {
+        if (isFirstRun && allFilePath.Count > 0)
+        {
+            allFilePath.TrimExcess();
+            allFilePath.Clear();
+        }
 
+        string[] names = Directory.GetFiles(path);
+        string[] dirs = Directory.GetDirectories(path);
+
+
+        foreach (string dir in dirs)
+        {
+            RecursiveDir(dir, ref allFilePath, false);
+        }
+        foreach (string filename in names)
+        {
+            string ext = Path.GetExtension(filename);
+            if (ext.Equals(".meta")) continue;
+
+            allFilePath.Add(filename.Replace('\\', '/'));
+        }
+    }
 }

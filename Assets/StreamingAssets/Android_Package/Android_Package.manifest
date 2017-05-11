@@ -1,0 +1,26 @@
+ManifestFileVersion: 0
+CRC: 4063821419
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: ui/general.pak
+      Dependencies: {}
+    Info_1:
+      Name: ui/head.pak
+      Dependencies: {}
+    Info_2:
+      Name: ui/item.pak
+      Dependencies: {}
+    Info_3:
+      Name: ui/special.pak
+      Dependencies: {}
+    Info_4:
+      Name: panel/demo.pak
+      Dependencies: {}
+    Info_5:
+      Name: panel/loginpanel.pak
+      Dependencies:
+        Dependency_0: ui/general.pak
+    Info_6:
+      Name: panel/mainpanel.pak
+      Dependencies: {}

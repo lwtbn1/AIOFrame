@@ -15,20 +15,17 @@ public class UpdateManager : MonoBehaviour {
     Dictionary<string, string> need_update_dic;
 
 	void Start () {
-        if (Config.UpdateMode)
-        {
-            StartCoroutine(CheckUpdate());
-        }
-        else
-        {
-            if (OnEndUpdate != null)
-                OnEndUpdate();
-        }
-
+        StartCoroutine(CheckUpdate());
 	}
     byte[] new_ver_bytes;
     IEnumerator CheckUpdate()
     {
+        if (!Config.UpdateMode)
+        {
+            if (OnEndUpdate != null)
+                OnEndUpdate();
+            yield break;
+        }
         Debug.Log("开始检查更新......");
 
         old_ver_dic = new Dictionary<string, string>();
@@ -87,6 +84,8 @@ public class UpdateManager : MonoBehaviour {
         StartCoroutine(StartUpdate());
     }
 
+
+
     IEnumerator StartUpdate()
     {
         if (OnStartUpdate != null)
@@ -132,6 +131,19 @@ public class UpdateManager : MonoBehaviour {
     public Action OnStartUpdate;
     public Action<float> OnUpdating;
     public Action OnEndUpdate;
-    
+
+    IEnumerator CheckUnPack()
+    {
+        yield return 1;
+    }
+
+    IEnumerator UnPack()
+    {
+        yield return 1;
+    }
+
+    public Action OnStartUnPack;
+    public Action<float> OnUnPacking;
+    public Action OnEndUnPack;
 
 }

@@ -51,9 +51,9 @@ public class TestABLoader : MonoBehaviour
 
 #if UNITY_5
 #if UNITY_ANDROID && !UNITY_EDITOR
-        string main = streamingPath + "/" + LuaConst.osDir + "/" + LuaConst.osDir;
+        string main = streamingPath + "/" + AppPlatform.PackageRoot + "/Lua";
 #else
-        string main = "file:///" + streamingPath + "/" + LuaConst.osDir + "/" + LuaConst.osDir;
+        string main = "file:///" + streamingPath + "/" + GameDef.PackageRoot + "/Lua";
 #endif
         WWW www = new WWW(main);
         yield return www;
@@ -73,7 +73,7 @@ public class TestABLoader : MonoBehaviour
 #if UNITY_ANDROID && !UNITY_EDITOR
             string path = streamingPath + "/" + LuaConst.osDir + "/" + str;
 #else
-            string path = "file:///" + streamingPath + "/" + LuaConst.osDir + "/" + str;
+            string path = "file:///" + streamingPath + "/" + GameDef.PackageRoot + "/Lua";
 #endif
             string name = Path.GetFileNameWithoutExtension(str);
             StartCoroutine(CoLoadBundle(name, path));            

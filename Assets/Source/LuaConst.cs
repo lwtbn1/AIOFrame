@@ -2,18 +2,10 @@
 
 public static class LuaConst
 {
-    public static string luaDir = Application.dataPath + "/StreamingAssets/adr_res" + "/Lua";                //lua逻辑代码目录(目前只考虑Andoid下)
+    public static string osDir = GameDef.PackageRoot;
+    public static string luaDir = Application.dataPath + "/StreamingAssets/" + osDir + "/Lua";                //lua逻辑代码目录(目前只考虑Andoid下)
     public static string toluaDir = Application.dataPath + "/ToLua/Lua";        //tolua lua文件目录
 
-#if UNITY_STANDALONE
-    public static string osDir = "Win";
-#elif UNITY_ANDROID
-    public static string osDir = "Android";            
-#elif UNITY_IPHONE
-    public static string osDir = "iOS";        
-#else
-    public static string osDir = "";        
-#endif
 
     public static string luaResDir = string.Format("{0}/{1}/Lua", Application.persistentDataPath, osDir);      //手机运行时lua文件下载目录    
 
