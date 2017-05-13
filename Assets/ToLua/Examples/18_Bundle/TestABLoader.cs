@@ -51,7 +51,7 @@ public class TestABLoader : MonoBehaviour
 
 #if UNITY_5
 #if UNITY_ANDROID && !UNITY_EDITOR
-        string main = streamingPath + "/" + AppPlatform.PackageRoot + "/Lua";
+        string main = streamingPath + "/" + GameDef.PackageRoot + "/Lua";
 #else
         string main = "file:///" + streamingPath + "/" + GameDef.PackageRoot + "/Lua";
 #endif

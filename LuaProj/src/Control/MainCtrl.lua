@@ -38,9 +38,6 @@ function MainCtrl.Enable()
     Util.SetSpriteSyn(this.panel.ui.img_2,"head","head_portrait_1");
     Util.SetSpriteSyn(this.panel.ui.img_3,"item","30112004");
     --LuaHelper.AddUpdateEvent(MainCtrl.Update, MainCtrl);
-    for key, value in pairs(_G) do      
-        print('key in _G : ' .. key);
-    end 
 end
 
 function MainCtrl.Update()

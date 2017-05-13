@@ -9,6 +9,7 @@ class LuaManager : LuaClient
     
     protected override void Awake()
     {
+        Debug.Log("LuaManager ...... Awake..........");
         base.Awake();
        
     }

@@ -15,28 +15,49 @@ public class UpdateManager : MonoBehaviour {
     Dictionary<string, string> need_update_dic;
 
 	void Start () {
-        StartCoroutine(CheckUpdate());
+        StartCoroutine(CheckUnPack());
 	}
-    byte[] new_ver_bytes;
+    string LatestFileList;
+    string LatestVersion;
+    string wwwResPath = "";
     IEnumerator CheckUpdate()
     {
-        if (!Config.UpdateMode)
+        if (!Global.UpdateMode)
         {
             if (OnEndUpdate != null)
                 OnEndUpdate();
             yield break;
         }
-        Debug.Log("开始检查更新......");
+        Debug.Log("startchecke update......");
 
+        WWW www = new WWW(NetConfig.ResUrl + "/LatestVersion.ini");
+        while (!www.isDone)
+            yield return new WaitForEndOfFrame();
+        if (!string.IsNullOrEmpty(www.error))
+        {
+            Debug.Log("11111 www.error : " + www.error);
+            yield break;
+        }
+        LatestVersion = www.text.Trim();
+        string nativeVersion = File.ReadAllText(Application.persistentDataPath + "/resVersion.ini").Trim();
+        Debug.Log("ver : " + LatestVersion + "   " + nativeVersion);
+        bool needUpdate = float.Parse(LatestVersion) > float.Parse(nativeVersion);
+        
+        if (!needUpdate)   
+        {
+            //不需要更新，做些其他操作
+            if (OnEndUpdate != null)
+                OnEndUpdate();
+            yield break;
+        }
+        
         old_ver_dic = new Dictionary<string, string>();
         new_ver_dic = new Dictionary<string, string>();
         need_update_dic = new Dictionary<string, string>();
-
-        WWW www = new WWW(NetConfig.ResUrl + "/version.ini");
+        wwwResPath = NetConfig.ResUrl + "/" + LatestVersion + "/" + GameDef.PackageRoot;
+        www = new WWW(wwwResPath + "/filelist.txt");
         while (!www.isDone)
-        {
-            yield return 1;
-        }
+            yield return new WaitForEndOfFrame();
         byte[] bytes = www.bytes;
         string ver_new_str = Encoding.UTF8.GetString(bytes);
         string[] splits = ver_new_str.Split(new string[]{"\n"}, System.StringSplitOptions.None);
@@ -48,9 +69,9 @@ public class UpdateManager : MonoBehaviour {
             ClassCollections.VerData data = ClassCollections.VerData.ToObj(splits[i]);
             new_ver_dic.Add(data.res_name, data.md5);
         }
-        new_ver_bytes = bytes;
+        LatestFileList = www.text;
 
-        FileInfo fi_ver_old = new FileInfo(Application.persistentDataPath + "/version.ini");
+        FileInfo fi_ver_old = new FileInfo(Application.persistentDataPath + "/" + GameDef.PackageRoot + "/filelist.txt");
         if (!fi_ver_old.Exists)
         {
             need_update_dic = new_ver_dic;
@@ -93,7 +114,7 @@ public class UpdateManager : MonoBehaviour {
         float ix = 0;
         foreach (KeyValuePair<string, string> kv in need_update_dic)
         {
-            WWW www = new WWW( NetConfig.ResUrl + "/" + kv.Key);
+            WWW www = new WWW(wwwResPath + "/" + kv.Key);
             while (!www.isDone)
             {
                 yield return new WaitForEndOfFrame();
@@ -103,27 +124,26 @@ public class UpdateManager : MonoBehaviour {
                 OnUpdating(ix / (float)need_update_dic.Count);
             Debug.Log(ix / (float)need_update_dic.Count);
             byte[] bytes = www.bytes;
-            string file_full_path = Application.persistentDataPath + "/" + kv.Key;
-            FileInfo file = new FileInfo(file_full_path);
-            string folder_path =  file_full_path.Substring(0, file_full_path.LastIndexOf("/"));
-            DirectoryInfo dir = new DirectoryInfo(folder_path);
-            if (!dir.Exists)
-                dir.Create();
-            if (file.Exists)
-                file.Delete();
-            FileStream fs = file.Open(FileMode.CreateNew, FileAccess.Write);
-            fs.Write(bytes, 0, bytes.Length);
-            fs.Flush();
-            fs.Close();
+            string file_full_path = Application.persistentDataPath + "/" + GameDef.PackageRoot +"/" + kv.Key;
+            string folder_path = Path.GetDirectoryName(file_full_path);
+            if (!Directory.Exists(folder_path))
+                Directory.CreateDirectory(folder_path);
+            if (File.Exists(file_full_path))
+                File.Delete(file_full_path);
+            File.WriteAllBytes(file_full_path, bytes);
+            yield return new WaitForEndOfFrame();
         }
-        
-        FileInfo fi_ver = new FileInfo(Application.persistentDataPath + "/version.ini");
-        if (fi_ver.Exists)
-            fi_ver.Delete();
-        FileStream fs_ver = fi_ver.Open(FileMode.Create, FileAccess.ReadWrite);
-        fs_ver.Write(new_ver_bytes, 0, new_ver_bytes.Length);
-        fs_ver.Flush();
-        fs_ver.Close();
+
+        string resVersionPath = Application.persistentDataPath + "/resVersion.ini";
+        if (File.Exists(resVersionPath))
+            File.Delete(resVersionPath);
+        File.WriteAllText(resVersionPath, LatestVersion, Encoding.UTF8);
+
+        string filelistPath = Application.persistentDataPath + "/" + GameDef.PackageRoot + "/filelist.txt";
+        if (File.Exists(filelistPath))
+            File.Delete(filelistPath);
+        File.WriteAllText(filelistPath,LatestFileList, Encoding.UTF8);
+
         if (OnEndUpdate != null)
             OnEndUpdate();
         
@@ -134,14 +154,95 @@ public class UpdateManager : MonoBehaviour {
 
     IEnumerator CheckUnPack()
     {
-        yield return 1;
+        if (!Global.IsSandBoxMod)
+        {
+            StartCoroutine(CheckUpdate());
+            yield break;
+        }
+            
+        if (OnCheckUnpack != null)
+            OnCheckUnpack();
+        FileInfo p_ResVersionFile = new FileInfo(Application.persistentDataPath + "/resVersion.ini");
+        
+        string preResVersion = PlayerPrefs.GetString("resVersion");
+        
+        bool needUnPack = false;
+        if (!p_ResVersionFile.Exists || string.IsNullOrEmpty(preResVersion))
+        {
+            needUnPack = true;
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(preResVersion))
+            {
+                WWW www = new WWW(GameDef.StreamingAssetsPath + "/resVersion.ini");
+                while (!www.isDone)
+                    yield return new WaitForEndOfFrame();
+                if (!string.IsNullOrEmpty(www.error))
+                {
+                    Debug.LogError("www.error : " + www.error);
+                    yield break;
+                }
+                string nowResVersion = www.text;
+                www.Dispose();
+                Debug.Log("version : " + nowResVersion + "   " + preResVersion);
+                if (float.Parse(nowResVersion) < float.Parse(preResVersion))
+                    needUnPack = true;
+            }
+        }
+        Debug.Log("needUnpack ::::::::::::::: " + needUnPack);
+        if (needUnPack)
+            StartCoroutine(UnPack());
+        else
+            StartCoroutine(CheckUpdate());
+
     }
 
     IEnumerator UnPack()
     {
-        yield return 1;
+        if (OnStartUnPack != null)
+            OnStartUnPack();
+        PlayerPrefs.DeleteKey("resVersion");
+        DirectoryInfo packageRoot = new DirectoryInfo(Application.persistentDataPath + "/" + GameDef.PackageRoot);
+        if (packageRoot.Exists)
+            packageRoot.Delete(true);
+        packageRoot.Create();
+        WWW www = new WWW(GameDef.StreamingAssetsPath + "/" + GameDef.PackageRoot + "/filelist.txt");
+        while (!www.isDone)
+            yield return new WaitForEndOfFrame();
+        if (!string.IsNullOrEmpty(www.error))
+        {
+            Debug.LogError("www.error : " + www.error);
+            yield break;
+        }
+        string filelistStr = www.text;
+        File.WriteAllText(Application.persistentDataPath + "/" + GameDef.PackageRoot + "/filelist.txt", www.text, Encoding.UTF8);
+        string[] filelistLines = File.ReadAllLines(Application.persistentDataPath + "/" + GameDef.PackageRoot + "/filelist.txt");
+        for (var i = 0; i < filelistLines.Length; i++)
+        {
+            ClassCollections.VerData verData = ClassCollections.VerData.ToObj(filelistLines[i]);
+            string fullName = Application.persistentDataPath + "/" + GameDef.PackageRoot + "/" + verData.res_name;
+            string dir = Path.GetDirectoryName(fullName);
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            www = new WWW(GameDef.StreamingAssetsPath + "/" + GameDef.PackageRoot + "/" + verData.res_name);
+            while (!www.isDone)
+                yield return new WaitForEndOfFrame();
+            File.WriteAllBytes(fullName, www.bytes);
+            if (OnUnPacking != null)
+                OnUnPacking((float)i / (float)filelistLines.Length);
+            yield return new WaitForEndOfFrame();
+        }
+        www = new WWW(GameDef.StreamingAssetsPath + "/resVersion.ini");
+        while (!www.isDone)
+            yield return new WaitForEndOfFrame();
+        File.WriteAllBytes(Application.persistentDataPath + "/resVersion.ini", www.bytes);
+        PlayerPrefs.SetString("resVersion",www.text);
+        if (OnEndUnPack != null)
+            OnEndUnPack();
+        StartCoroutine(CheckUpdate());
     }
 
+    public Action OnCheckUnpack;
     public Action OnStartUnPack;
     public Action<float> OnUnPacking;
     public Action OnEndUnPack;

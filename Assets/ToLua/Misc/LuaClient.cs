@@ -177,6 +177,7 @@ public class LuaClient : MonoBehaviour
     {
         luaState.Start();                
         StartLooper();
+        Debug.Log("will startMain .....");
         StartMain();
     }
 

@@ -47,7 +47,7 @@ public class GameDef {
         {
             if (Application.isMobilePlatform)
             {
-                return "file:///" + Application.persistentDataPath + "/" + PackageRoot;
+                return Application.persistentDataPath + "/" + PackageRoot;
             }
             else
             {
@@ -55,11 +55,40 @@ public class GameDef {
             }
         }
     }
-    public static string PanelPathRoot = string.Format(Application.dataPath + "/StreamingAssets/{0}/panel/", PackageRoot);
-    public static string UIPathRoot = string.Format(Application.dataPath + "/StreamingAssets/{0}/ui/",PackageRoot);
-    public static string EffectPathRoot = string.Format(Application.dataPath + "/StreamingAssets/{0}/effect",PackageRoot);
-    public static string ModelPathRoot = string.Format(Application.dataPath + "/StreamingAssets/{0}/model", PackageRoot);
+    public static string PanelPathRoot = BundlePathRoot + "/panel/";
+    public static string UIPathRoot = BundlePathRoot + "/ui/";
+    public static string EffectPathRoot = BundlePathRoot + "/effect";
+    public static string ModelPathRoot = BundlePathRoot + "/model";
 
     public static string BundleExtName = ".pak";
-	
+
+    public static string RawResourcesDir = Application.dataPath + "/RawResources";
+
+    public enum PlatefromEnum
+    {
+        Windows = 0,
+        Android,
+        IOS,
+    }
+
+    public static string[] PlateformNames = new string[]{
+        "Windows",
+        "Android",
+        "IOS",
+    };
+
+    public static PlatefromEnum CurrentPlateform
+    {
+        get
+        {
+#if UNITY_STANDALONE_WIN
+            return PlatefromEnum.Windows;
+#elif UNITY_ANDROID
+            return PlatefromEnum.Android;
+#elif UNITY_IPHONE
+            return PlatefromEnum.IOS;
+#endif
+        }
+    }
+
 }

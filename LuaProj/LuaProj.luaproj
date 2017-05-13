@@ -37,6 +37,7 @@
     <Folder Include="src\Control\" />
     <Folder Include="src\Manager\" />
     <Folder Include="src\Model\" />
+    <Folder Include="src\Confg\" />
     <Folder Include="src\View\" />
   </ItemGroup>
   <ItemGroup>

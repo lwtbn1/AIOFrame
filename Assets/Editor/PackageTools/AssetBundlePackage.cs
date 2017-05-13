@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Linq;
-public class Build  {
+public class AssetBundlePackage  {
 
     public static BuildTarget CurBuildTarget
     {
@@ -32,7 +32,7 @@ public class Build  {
 
     static BundlesConfig GetBundlesConfig()
     {
-        FileInfo file = new FileInfo(Application.dataPath + "/RawResources/BundlesConfig.txt");
+        FileInfo file = new FileInfo(Application.dataPath + "/Editor/PackageTools/BundlesConfig.txt");
         StreamReader sr = new StreamReader(file.OpenRead());
         string config =  sr.ReadToEnd();
         BundlesConfig bundlesConfig = LitJson.JsonMapper.ToObject<BundlesConfig>(config);
@@ -67,9 +67,7 @@ public class Build  {
         return list.ToArray();
     }
 
-
-    [MenuItem("Pack/PackCurrentPlatform")]
-    static void PackCurrentPlatform()
+    public static void PackCurrentPlatform()
     {
         //打资源包
         BundlesConfig bundlesConfig = GetBundlesConfig();
@@ -80,13 +78,14 @@ public class Build  {
         BuildPipeline.BuildAssetBundles(outputPath, builds, BuildAssetBundleOptions.None, CurBuildTarget);
         //复制Lua脚本
         MoveLuaFile();
-
+        //复制config
+        MoveConfig();
         //创建FileList
         CreateFileList();
+
         AssetDatabase.Refresh();
     }
 
-    [MenuItem("Pack/CreateFileList")]
     static void CreateFileList()
     {
         FileInfo fileList = new FileInfo(Application.dataPath + "/StreamingAssets/" + GameDef.PackageRoot + "/filelist.txt");
@@ -128,9 +127,18 @@ public class Build  {
         if (lua_dir_old.Exists)
             lua_dir_old.Delete(true);
         string luaSrcDir = Application.dataPath.Substring(0, Application.dataPath.IndexOf("Assets")) + "/LuaProj/src";
-        FileMgr.CopyDirectory(luaSrcDir, Application.dataPath + "/StreamingAssets/" + GameDef.PackageRoot + "/Lua");
-    }
+        FileUtil.CopyDir(luaSrcDir, Application.dataPath + "/StreamingAssets/" + GameDef.PackageRoot + "/Lua", new List<string>() { "meta", "manifest"});
 
+        DirectoryInfo tolua_dir_old = new DirectoryInfo(Application.dataPath + "/StreamingAssets/" + GameDef.PackageRoot + "/ToLua");
+        if (tolua_dir_old.Exists)
+            tolua_dir_old.Delete(true);
+        string toluaSrcDir = Application.dataPath + "/ToLua/Lua";
+        FileUtil.CopyDir(toluaSrcDir, Application.dataPath + "/StreamingAssets/" + GameDef.PackageRoot + "/ToLua", new List<string>() { "meta", "manifest" });
+    }
+    static void MoveConfig()
+    {
+        FileUtil.CopyDir(GameDef.RawResourcesDir + "/Config", Application.dataPath + "/StreamingAssets", new List<string>() { "meta", "manifest" });
+    }
     
     /// <summary>
     /// 得到一个文件的ABB
@@ -169,7 +177,7 @@ public class Build  {
         if (!rDirInfo.Exists) return null;
 
         List<string> allABPaths = new List<string>();
-        FileMgr.RecursiveDir(bundleInfo.assetPath, ref allABPaths);
+        FileUtil.RecursiveDir(bundleInfo.assetPath, ref allABPaths);
 
         List<AssetBundleBuild> rABBList = new List<AssetBundleBuild>();
 
