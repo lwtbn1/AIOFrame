@@ -8,10 +8,11 @@ public class UnityEngine_ColliderWrap
 	{
 		L.BeginClass(typeof(UnityEngine.Collider), typeof(UnityEngine.Component));
 		L.RegFunction("ClosestPointOnBounds", ClosestPointOnBounds);
+		L.RegFunction("ClosestPoint", ClosestPoint);
 		L.RegFunction("Raycast", Raycast);
 		L.RegFunction("New", _CreateUnityEngine_Collider);
 		L.RegFunction("__eq", op_Equality);
-		L.RegFunction("__tostring", Lua_ToString);
+		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("enabled", get_enabled, set_enabled);
 		L.RegVar("attachedRigidbody", get_attachedRigidbody, null);
 		L.RegVar("isTrigger", get_isTrigger, set_isTrigger);
@@ -65,6 +66,24 @@ public class UnityEngine_ColliderWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int ClosestPoint(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.Collider obj = (UnityEngine.Collider)ToLua.CheckObject(L, 1, typeof(UnityEngine.Collider));
+			UnityEngine.Vector3 arg0 = ToLua.ToVector3(L, 2);
+			UnityEngine.Vector3 o = obj.ClosestPoint(arg0);
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Raycast(IntPtr L)
 	{
 		try
@@ -101,23 +120,6 @@ public class UnityEngine_ColliderWrap
 		{
 			return LuaDLL.toluaL_exception(L, e);
 		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_ToString(IntPtr L)
-	{
-		object obj = ToLua.ToObject(L, 1);
-
-		if (obj != null)
-		{
-			LuaDLL.lua_pushstring(L, obj.ToString());
-		}
-		else
-		{
-			LuaDLL.lua_pushnil(L);
-		}
-
-		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

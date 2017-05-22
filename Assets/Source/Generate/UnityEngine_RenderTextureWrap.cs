@@ -14,12 +14,13 @@ public class UnityEngine_RenderTextureWrap
 		L.RegFunction("IsCreated", IsCreated);
 		L.RegFunction("DiscardContents", DiscardContents);
 		L.RegFunction("MarkRestoreExpected", MarkRestoreExpected);
+		L.RegFunction("GenerateMips", GenerateMips);
+		L.RegFunction("GetNativeDepthBufferPtr", GetNativeDepthBufferPtr);
 		L.RegFunction("SetGlobalShaderProperty", SetGlobalShaderProperty);
-		L.RegFunction("GetTexelOffset", GetTexelOffset);
 		L.RegFunction("SupportsStencil", SupportsStencil);
 		L.RegFunction("New", _CreateUnityEngine_RenderTexture);
 		L.RegFunction("__eq", op_Equality);
-		L.RegFunction("__tostring", Lua_ToString);
+		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("width", get_width, set_width);
 		L.RegVar("height", get_height, set_height);
 		L.RegVar("depth", get_depth, set_depth);
@@ -27,9 +28,8 @@ public class UnityEngine_RenderTextureWrap
 		L.RegVar("sRGB", get_sRGB, null);
 		L.RegVar("format", get_format, set_format);
 		L.RegVar("useMipMap", get_useMipMap, set_useMipMap);
-		L.RegVar("generateMips", get_generateMips, set_generateMips);
-		L.RegVar("isCubemap", get_isCubemap, set_isCubemap);
-		L.RegVar("isVolume", get_isVolume, set_isVolume);
+		L.RegVar("autoGenerateMips", get_autoGenerateMips, set_autoGenerateMips);
+		L.RegVar("dimension", get_dimension, set_dimension);
 		L.RegVar("volumeDepth", get_volumeDepth, set_volumeDepth);
 		L.RegVar("antiAliasing", get_antiAliasing, set_antiAliasing);
 		L.RegVar("enableRandomWrite", get_enableRandomWrite, set_enableRandomWrite);
@@ -270,14 +270,13 @@ public class UnityEngine_RenderTextureWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SetGlobalShaderProperty(IntPtr L)
+	static int GenerateMips(IntPtr L)
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 2);
+			ToLua.CheckArgsCount(L, 1);
 			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)ToLua.CheckObject(L, 1, typeof(UnityEngine.RenderTexture));
-			string arg0 = ToLua.CheckString(L, 2);
-			obj.SetGlobalShaderProperty(arg0);
+			obj.GenerateMips();
 			return 0;
 		}
 		catch(Exception e)
@@ -287,15 +286,32 @@ public class UnityEngine_RenderTextureWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetTexelOffset(IntPtr L)
+	static int GetNativeDepthBufferPtr(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)ToLua.CheckObject(L, 1, typeof(UnityEngine.RenderTexture));
-			UnityEngine.Vector2 o = obj.GetTexelOffset();
-			ToLua.Push(L, o);
+			System.IntPtr o = obj.GetNativeDepthBufferPtr();
+			LuaDLL.lua_pushlightuserdata(L, o);
 			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetGlobalShaderProperty(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)ToLua.CheckObject(L, 1, typeof(UnityEngine.RenderTexture));
+			string arg0 = ToLua.CheckString(L, 2);
+			obj.SetGlobalShaderProperty(arg0);
+			return 0;
 		}
 		catch(Exception e)
 		{
@@ -336,23 +352,6 @@ public class UnityEngine_RenderTextureWrap
 		{
 			return LuaDLL.toluaL_exception(L, e);
 		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_ToString(IntPtr L)
-	{
-		object obj = ToLua.ToObject(L, 1);
-
-		if (obj != null)
-		{
-			LuaDLL.lua_pushstring(L, obj.ToString());
-		}
-		else
-		{
-			LuaDLL.lua_pushnil(L);
-		}
-
-		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -489,7 +488,7 @@ public class UnityEngine_RenderTextureWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_generateMips(IntPtr L)
+	static int get_autoGenerateMips(IntPtr L)
 	{
 		object o = null;
 
@@ -497,18 +496,18 @@ public class UnityEngine_RenderTextureWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)o;
-			bool ret = obj.generateMips;
+			bool ret = obj.autoGenerateMips;
 			LuaDLL.lua_pushboolean(L, ret);
 			return 1;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index generateMips on a nil value" : e.Message);
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index autoGenerateMips on a nil value" : e.Message);
 		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_isCubemap(IntPtr L)
+	static int get_dimension(IntPtr L)
 	{
 		object o = null;
 
@@ -516,32 +515,13 @@ public class UnityEngine_RenderTextureWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)o;
-			bool ret = obj.isCubemap;
-			LuaDLL.lua_pushboolean(L, ret);
+			UnityEngine.Rendering.TextureDimension ret = obj.dimension;
+			ToLua.Push(L, ret);
 			return 1;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index isCubemap on a nil value" : e.Message);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_isVolume(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)o;
-			bool ret = obj.isVolume;
-			LuaDLL.lua_pushboolean(L, ret);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index isVolume on a nil value" : e.Message);
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index dimension on a nil value" : e.Message);
 		}
 	}
 
@@ -769,7 +749,7 @@ public class UnityEngine_RenderTextureWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_generateMips(IntPtr L)
+	static int set_autoGenerateMips(IntPtr L)
 	{
 		object o = null;
 
@@ -778,17 +758,17 @@ public class UnityEngine_RenderTextureWrap
 			o = ToLua.ToObject(L, 1);
 			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)o;
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
-			obj.generateMips = arg0;
+			obj.autoGenerateMips = arg0;
 			return 0;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index generateMips on a nil value" : e.Message);
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index autoGenerateMips on a nil value" : e.Message);
 		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_isCubemap(IntPtr L)
+	static int set_dimension(IntPtr L)
 	{
 		object o = null;
 
@@ -796,32 +776,13 @@ public class UnityEngine_RenderTextureWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)o;
-			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
-			obj.isCubemap = arg0;
+			UnityEngine.Rendering.TextureDimension arg0 = (UnityEngine.Rendering.TextureDimension)ToLua.CheckObject(L, 2, typeof(UnityEngine.Rendering.TextureDimension));
+			obj.dimension = arg0;
 			return 0;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index isCubemap on a nil value" : e.Message);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_isVolume(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)o;
-			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
-			obj.isVolume = arg0;
-			return 0;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index isVolume on a nil value" : e.Message);
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index dimension on a nil value" : e.Message);
 		}
 	}
 

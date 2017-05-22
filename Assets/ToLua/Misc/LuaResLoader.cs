@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2015-2016 topameng(topameng@qq.com)
+Copyright (c) 2015-2017 topameng(topameng@qq.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -86,7 +86,7 @@ public class LuaResLoader : LuaFileUtils
 
         sb.AppendFormat("\n\tno file ./Resources/?.lua");
         sb = sb.Replace("?", fileName);
-        return sb.ToString();
+        return StringBuilderCache.GetStringAndRelease(sb);
     }
 
     byte[] ReadResourceFile(string fileName)

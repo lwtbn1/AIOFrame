@@ -14,9 +14,11 @@ public class UnityEngine_QualitySettingsWrap
 		L.RegFunction("__eq", op_Equality);
 		L.RegVar("names", get_names, null);
 		L.RegVar("pixelLightCount", get_pixelLightCount, set_pixelLightCount);
+		L.RegVar("shadows", get_shadows, set_shadows);
 		L.RegVar("shadowProjection", get_shadowProjection, set_shadowProjection);
 		L.RegVar("shadowCascades", get_shadowCascades, set_shadowCascades);
 		L.RegVar("shadowDistance", get_shadowDistance, set_shadowDistance);
+		L.RegVar("shadowResolution", get_shadowResolution, set_shadowResolution);
 		L.RegVar("shadowNearPlaneOffset", get_shadowNearPlaneOffset, set_shadowNearPlaneOffset);
 		L.RegVar("shadowCascade2Split", get_shadowCascade2Split, set_shadowCascade2Split);
 		L.RegVar("shadowCascade4Split", get_shadowCascade4Split, set_shadowCascade4Split);
@@ -25,6 +27,7 @@ public class UnityEngine_QualitySettingsWrap
 		L.RegVar("lodBias", get_lodBias, set_lodBias);
 		L.RegVar("maximumLODLevel", get_maximumLODLevel, set_maximumLODLevel);
 		L.RegVar("particleRaycastBudget", get_particleRaycastBudget, set_particleRaycastBudget);
+		L.RegVar("softParticles", get_softParticles, set_softParticles);
 		L.RegVar("softVegetation", get_softVegetation, set_softVegetation);
 		L.RegVar("realtimeReflectionProbes", get_realtimeReflectionProbes, set_realtimeReflectionProbes);
 		L.RegVar("billboardsFaceCameraPosition", get_billboardsFaceCameraPosition, set_billboardsFaceCameraPosition);
@@ -191,6 +194,20 @@ public class UnityEngine_QualitySettingsWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_shadows(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, UnityEngine.QualitySettings.shadows);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_shadowProjection(IntPtr L)
 	{
 		try
@@ -224,6 +241,20 @@ public class UnityEngine_QualitySettingsWrap
 		try
 		{
 			LuaDLL.lua_pushnumber(L, UnityEngine.QualitySettings.shadowDistance);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_shadowResolution(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, UnityEngine.QualitySettings.shadowResolution);
 			return 1;
 		}
 		catch(Exception e)
@@ -336,6 +367,20 @@ public class UnityEngine_QualitySettingsWrap
 		try
 		{
 			LuaDLL.lua_pushinteger(L, UnityEngine.QualitySettings.particleRaycastBudget);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_softParticles(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushboolean(L, UnityEngine.QualitySettings.softParticles);
 			return 1;
 		}
 		catch(Exception e)
@@ -514,6 +559,21 @@ public class UnityEngine_QualitySettingsWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_shadows(IntPtr L)
+	{
+		try
+		{
+			UnityEngine.ShadowQuality arg0 = (UnityEngine.ShadowQuality)ToLua.CheckObject(L, 2, typeof(UnityEngine.ShadowQuality));
+			UnityEngine.QualitySettings.shadows = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_shadowProjection(IntPtr L)
 	{
 		try
@@ -550,6 +610,21 @@ public class UnityEngine_QualitySettingsWrap
 		{
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			UnityEngine.QualitySettings.shadowDistance = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_shadowResolution(IntPtr L)
+	{
+		try
+		{
+			UnityEngine.ShadowResolution arg0 = (UnityEngine.ShadowResolution)ToLua.CheckObject(L, 2, typeof(UnityEngine.ShadowResolution));
+			UnityEngine.QualitySettings.shadowResolution = arg0;
 			return 0;
 		}
 		catch(Exception e)
@@ -670,6 +745,21 @@ public class UnityEngine_QualitySettingsWrap
 		{
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 			UnityEngine.QualitySettings.particleRaycastBudget = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_softParticles(IntPtr L)
+	{
+		try
+		{
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			UnityEngine.QualitySettings.softParticles = arg0;
 			return 0;
 		}
 		catch(Exception e)

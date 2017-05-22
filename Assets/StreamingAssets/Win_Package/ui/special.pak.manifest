@@ -1,0 +1,44 @@
+ManifestFileVersion: 0
+CRC: 3163693359
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 09f128af3beb856bbf674cf044814870
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4774d6da9b606debf00b5a5d61c4487c
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/RawResources/UI/Special/ui_common_frame_progress-bar-01.png
+- Assets/RawResources/UI/Special/ui_common_btn_restore_normal.png
+- Assets/RawResources/UI/Special/-ui_common_frame_battlefield-report-01.png
+- Assets/RawResources/UI/Special/ui_common_clear.png
+- Assets/RawResources/UI/Special/ui_common_icon_hand.png
+- Assets/RawResources/UI/Special/-ui_common_frame_shop.png
+- Assets/RawResources/UI/Special/-ui_common_frame_banner.png
+- Assets/RawResources/UI/Special/-ui_common_frame_city-state-01.png
+- Assets/RawResources/UI/Special/ui_common_icon_qiancheng.png
+- Assets/RawResources/UI/Special/ui_common_frame_coordinate.png
+- Assets/RawResources/UI/Special/-ui_common_frame_troops.png
+- Assets/RawResources/UI/Special/ui_common_frame_chat.png
+- Assets/RawResources/UI/Special/ui_common_icon_change.png
+- Assets/RawResources/UI/Special/ui_common_sign_03.png
+- Assets/RawResources/UI/Special/-ui_common_frame_radio-check.png
+- Assets/RawResources/UI/Special/golden.png
+- Assets/RawResources/UI/Special/ui_common_icon_changeicon.png
+- Assets/RawResources/UI/Special/-ui_common_frame_main-interface-chat.png
+- Assets/RawResources/UI/Special/silver.png
+- Assets/RawResources/UI/Special/ui_common_btn_assist_normal.png
+- Assets/RawResources/UI/Special/-ui_common_frame_city-state.png
+- Assets/RawResources/UI/Special/ui_common_sign_02.png
+- Assets/RawResources/UI/Special/cooper.png
+- Assets/RawResources/UI/Special/ui_common_sign_level01.png
+- Assets/RawResources/UI/Special/1.png
+- Assets/RawResources/UI/Special/-ui_common_free_pressed.png
+- Assets/RawResources/UI/Special/ui_common_sign_level02.png
+Dependencies: []

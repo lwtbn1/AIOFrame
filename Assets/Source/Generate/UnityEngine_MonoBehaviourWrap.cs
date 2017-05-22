@@ -12,12 +12,11 @@ public class UnityEngine_MonoBehaviourWrap
 		L.RegFunction("CancelInvoke", CancelInvoke);
 		L.RegFunction("IsInvoking", IsInvoking);
 		L.RegFunction("StartCoroutine", StartCoroutine);
-		L.RegFunction("StartCoroutine_Auto", StartCoroutine_Auto);
 		L.RegFunction("StopCoroutine", StopCoroutine);
 		L.RegFunction("StopAllCoroutines", StopAllCoroutines);
 		L.RegFunction("print", print);
 		L.RegFunction("__eq", op_Equality);
-		L.RegFunction("__tostring", Lua_ToString);
+		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("useGUILayout", get_useGUILayout, set_useGUILayout);
 		L.EndClass();
 	}
@@ -167,24 +166,6 @@ public class UnityEngine_MonoBehaviourWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int StartCoroutine_Auto(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			UnityEngine.MonoBehaviour obj = (UnityEngine.MonoBehaviour)ToLua.CheckObject(L, 1, typeof(UnityEngine.MonoBehaviour));
-			System.Collections.IEnumerator arg0 = (System.Collections.IEnumerator)ToLua.CheckObject(L, 2, typeof(System.Collections.IEnumerator));
-			UnityEngine.Coroutine o = obj.StartCoroutine_Auto(arg0);
-			ToLua.PushObject(L, o);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int StopCoroutine(IntPtr L)
 	{
 		try
@@ -271,23 +252,6 @@ public class UnityEngine_MonoBehaviourWrap
 		{
 			return LuaDLL.toluaL_exception(L, e);
 		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_ToString(IntPtr L)
-	{
-		object obj = ToLua.ToObject(L, 1);
-
-		if (obj != null)
-		{
-			LuaDLL.lua_pushstring(L, obj.ToString());
-		}
-		else
-		{
-			LuaDLL.lua_pushnil(L);
-		}
-
-		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
