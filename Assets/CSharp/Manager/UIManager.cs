@@ -16,26 +16,6 @@ public class UIManager : MonoBehaviour
     string curOpenPanel;
     Dictionary<string, GameObject> panelCache = new Dictionary<string, GameObject>();
     Dictionary<string, GameObject> popupsCache = new Dictionary<string, GameObject>();
-    Transform panelRoot;
-    Transform PanelRoot
-    {
-        get{
-            if (panelRoot == null)
-                panelRoot = GameObject.Find("PanelRoot").transform;
-            return panelRoot;
-        }
-    }
-
-    Transform popupsRoot;
-    Transform PopupsRoot
-    {
-        get
-        {
-            if (popupsRoot == null)
-                popupsRoot = GameObject.Find("PopupsRoot").transform;
-            return panelRoot;
-        }
-    }
 
     /// <summary>
     /// 
@@ -63,7 +43,7 @@ public class UIManager : MonoBehaviour
             if (!syn)
             {
                 resMgr.LoadPanelAsyn(bundleName, panelName, (obj)=>{
-                    obj.transform.SetParent(PanelRoot,false);
+                    obj.transform.SetParent(Global.PanelRoot.transform,false);
                     if (!panelCache.ContainsKey(panelName))
                         panelCache.Add(panelName, obj);
 

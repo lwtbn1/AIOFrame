@@ -7,7 +7,7 @@ using LuaInterface;
 class LuaManager : LuaClient
 {
     
-    protected override void Awake()
+    void Awake()
     {
         Debug.Log("LuaManager ...... Awake..........");
         base.Awake();

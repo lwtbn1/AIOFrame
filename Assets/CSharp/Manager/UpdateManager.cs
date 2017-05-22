@@ -247,4 +247,16 @@ public class UpdateManager : MonoBehaviour {
     public Action<float> OnUnPacking;
     public Action OnEndUnPack;
 
+    public void AddAction(Action OnCheckUnpack, Action OnStartUnPack, Action<float> OnUnPacking, Action OnEndUnPack,
+        Action OnStartUpdate, Action<float> OnUpdating, Action OnEndUpdate)
+    {
+        this.OnCheckUnpack = OnCheckUnpack;
+        this.OnStartUnPack = OnStartUnPack;
+        this.OnUnPacking = OnUnPacking;
+        this.OnEndUnPack = OnEndUnPack;
+        this.OnStartUpdate = OnStartUpdate;
+        this.OnUpdating = OnUpdating;
+        this.OnEndUpdate = OnEndUpdate;
+    }
+
 }

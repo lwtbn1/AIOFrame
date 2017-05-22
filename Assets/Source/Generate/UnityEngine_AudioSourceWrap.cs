@@ -25,7 +25,7 @@ public class UnityEngine_AudioSourceWrap
 		L.RegFunction("GetSpatializerFloat", GetSpatializerFloat);
 		L.RegFunction("New", _CreateUnityEngine_AudioSource);
 		L.RegFunction("__eq", op_Equality);
-		L.RegFunction("__tostring", Lua_ToString);
+		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("volume", get_volume, set_volume);
 		L.RegVar("pitch", get_pitch, set_pitch);
 		L.RegVar("time", get_time, set_time);
@@ -97,7 +97,7 @@ public class UnityEngine_AudioSourceWrap
 			else if (count == 2 && TypeChecker.CheckTypes(L, 1, typeof(UnityEngine.AudioSource), typeof(ulong)))
 			{
 				UnityEngine.AudioSource obj = (UnityEngine.AudioSource)ToLua.ToObject(L, 1);
-				ulong arg0 = (ulong)LuaDLL.lua_tonumber(L, 2);
+				ulong arg0 = LuaDLL.tolua_touint64(L, 2);
 				obj.Play(arg0);
 				return 0;
 			}
@@ -422,23 +422,6 @@ public class UnityEngine_AudioSourceWrap
 		{
 			return LuaDLL.toluaL_exception(L, e);
 		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_ToString(IntPtr L)
-	{
-		object obj = ToLua.ToObject(L, 1);
-
-		if (obj != null)
-		{
-			LuaDLL.lua_pushstring(L, obj.ToString());
-		}
-		else
-		{
-			LuaDLL.lua_pushnil(L);
-		}
-
-		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

@@ -1,19 +1,24 @@
 fileFormatVersion: 2
-guid: f3b9938f609831e41b7ffc0f4108166b
+guid: 8f4af3c74c7469d498c7c7c7a40ead91
 PluginImporter:
   serializedVersion: 1
   iconMap: {}
   executionOrder: {}
   isPreloaded: 0
   platformData:
+    Android:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
     Any:
-      enabled: 1
+      enabled: 0
       settings: {}
     Editor:
-      enabled: 0
+      enabled: 1
       settings:
         CPU: x86
         DefaultValueInitialized: true
+        OS: Windows
     Linux:
       enabled: 1
       settings:
@@ -23,7 +28,7 @@ PluginImporter:
       settings:
         CPU: None
     LinuxUniversal:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: x86
     OSXIntel:
@@ -46,6 +51,11 @@ PluginImporter:
       enabled: 0
       settings:
         CPU: None
+    iOS:
+      enabled: 0
+      settings:
+        CompileFlags: 
+        FrameworkDependencies: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 

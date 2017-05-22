@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2015-2016 topameng(topameng@qq.com)
+Copyright (c) 2015-2017 topameng(topameng@qq.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -76,7 +76,7 @@ namespace LuaInterface
                 object arg0 = ToLua.ToVarObject(L, 2);
                 object arg1 = ToLua.ToVarObject(L, 3);
                 object[] arg2 = ToLua.CheckObjectArray(L, 4);
-                arg1 = Convert.ChangeType(arg1, property.PropertyType);
+                arg1 = TypeChecker.ChangeType(arg1, property.PropertyType);
                 property.SetValue(arg0, arg1, arg2);
                 return 0;
             }
@@ -88,7 +88,7 @@ namespace LuaInterface
                 Binder arg3 = (Binder)ToLua.ToObject(L, 5);
                 object[] arg4 = ToLua.CheckObjectArray(L, 6);
                 CultureInfo arg5 = (CultureInfo)ToLua.ToObject(L, 7);
-                arg1 = Convert.ChangeType(arg1, property.PropertyType);
+                arg1 = TypeChecker.ChangeType(arg1, property.PropertyType);
                 property.SetValue(arg0, arg1, arg2, arg3, arg4, arg5);
                 return 0;
             }

@@ -22,7 +22,7 @@ public class System_DelegateWrap
 		L.RegFunction("__add", op_Addition);
 		L.RegFunction("__sub", op_Subtraction);
 		L.RegFunction("__eq", op_Equality);
-		L.RegFunction("__tostring", Lua_ToString);
+		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("Method", get_Method, null);
 		L.RegVar("Target", get_Target, null);
 		L.EndClass();
@@ -300,7 +300,7 @@ public class System_DelegateWrap
                 {
                     LuaDelegate ld = ds[i].Target as LuaDelegate;
 
-                    if (ld != null && ld.func == func)
+                    if (ld != null && ld.func == func && ld.self == null)
                     {
                         arg0 = Delegate.Remove(arg0, ds[i]);
                         state.DelayDispose(ld.func);
@@ -315,7 +315,7 @@ public class System_DelegateWrap
             else
             {
                 Delegate arg1 = (Delegate)ToLua.CheckObject(L, 2, typeof(Delegate));
-                arg0 = Delegate.Remove(arg0, arg1);
+                arg0 = DelegateFactory.RemoveDelegate(arg0, arg1);                
                 ToLua.Push(L, arg0);
                 return 1;
             }
@@ -386,9 +386,9 @@ public class System_DelegateWrap
         {
             LuaDelegate ld = ds[i].Target as LuaDelegate;
 
-            if (ld != null && ld.func != null)
+            if (ld != null)
             {                
-                ld.func.Dispose();                
+                ld.Dispose();                
             }
         }
 
@@ -428,23 +428,6 @@ public class System_DelegateWrap
 		{
 			return LuaDLL.toluaL_exception(L, e);
 		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_ToString(IntPtr L)
-	{
-		object obj = ToLua.ToObject(L, 1);
-
-		if (obj != null)
-		{
-			LuaDLL.lua_pushstring(L, obj.ToString());
-		}
-		else
-		{
-			LuaDLL.lua_pushnil(L);
-		}
-
-		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

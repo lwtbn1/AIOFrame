@@ -20,7 +20,7 @@ public class UnityEngine_SceneManagement_SceneManagerWrap
 		L.RegFunction("MergeScenes", MergeScenes);
 		L.RegFunction("MoveGameObjectToScene", MoveGameObjectToScene);
 		L.RegFunction("New", _CreateUnityEngine_SceneManagement_SceneManager);
-		L.RegFunction("__tostring", Lua_ToString);
+		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("sceneCount", get_sceneCount, null);
 		L.RegVar("sceneCountInBuildSettings", get_sceneCountInBuildSettings, null);
 		L.RegVar("sceneLoaded", get_sceneLoaded, set_sceneLoaded);
@@ -334,23 +334,6 @@ public class UnityEngine_SceneManagement_SceneManagerWrap
 		{
 			return LuaDLL.toluaL_exception(L, e);
 		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_ToString(IntPtr L)
-	{
-		object obj = ToLua.ToObject(L, 1);
-
-		if (obj != null)
-		{
-			LuaDLL.lua_pushstring(L, obj.ToString());
-		}
-		else
-		{
-			LuaDLL.lua_pushnil(L);
-		}
-
-		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
